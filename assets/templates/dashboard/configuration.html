@@ -1,0 +1,15 @@
+{{define "title"}}PTC: Configuration{{end}}
+{{define "body"}}{{with $.Data}}
+<h3>Configuration</h3>
+
+{{with .Error}}<div class="alert alert-danger" role="alert"><strong>Eek!</strong> {{.}}</div>{{end}}
+
+<form method="POST" class="mb-3">
+  <div class="form-group">
+    <textarea class="form-control" name="config" rows="20">{{.Config}}</textarea>
+  </div>
+  <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+  <a class="btn btn-secondary" href="/dashboard/admin">Cancel</a>
+</form>
+
+{{end}}{{end}}

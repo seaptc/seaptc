@@ -1,0 +1,13 @@
+{{define "title"}}PTC: Lunch{{end}}
+{{define "body"}}
+{{range $lunch, $info := $.Data}}
+  <div class="mt-5" style="font-size: 1.3rem; page-break-after: always;">
+    <p><b>{{$lunch.Name}} @ {{$lunch.Location}}</b>
+    <p>{{range $option, $n := .Counts}}{{$option}}: {{$n}}<br>{{end}}
+    <div style="column-count: 2;">
+      {{range .Participants}}{{.Name}} &ndash; {{.LunchOption}}<br>{{end}}
+    </div>
+  </div>
+{{end}}
+{{end}}
+

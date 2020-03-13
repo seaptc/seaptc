@@ -1,0 +1,174 @@
+{{define "head"}}<style> .smaller-text { font-size: 90%; } </style>{{end}}
+{{define "title"}}{{$.ConferenceDate "2006"}} Program and Training Conferenc Report{{end}}
+{{define "body"}}
+
+  <div class="dropdown float-right sticky-top d-print-none">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Jump To
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="#">&uarr; Back to top</a>
+      <h6 class="dropdown-header">Conference</h6>
+      <a class="dropdown-item" href="#conference">Ratings</a>
+      <a class="dropdown-item" href="#comments">Comments</a>
+      <a class="dropdown-item" href="#learn">New topics you want to learn</a>
+      <a class="dropdown-item" href="#teach">New topics you want to teach</a>
+      <a class="dropdown-item" href="#marketing">Marketing</a>
+      <a class="dropdown-item" href="#years">Scouting Years</a>
+      <h6 class="dropdown-header">Classes</h6>
+      <a class="dropdown-item" href="#classes">Overview</a>
+      {{range $session, $classNumber := .Data.Nxx}}
+        <a class="dropdown-item" href="{{printf "#class%d" $classNumber}}">{{printf "%dxx" (add $session 1)}}</a>
+      {{end}}
+    </div>
+  </div>
+
+  <h3 class="mb-3">Evaluation Report<br><small class="text-muted">{{$.ConferenceDate "2006"}} Program and Training Conference</small></h3>
+
+  <h4 id="conference">Conference Evaluation <small class="text-muted">({{.Data.EvaluationCount}} evaluations submitted)</small></h4>
+
+  <p class="smaller-text">Ratings are: NR (not recorded), 1 (poor), 2, 3, 4 (great!). 
+
+  <table class="table table-sm table-bordered mb-3 smaller-text">
+    <thead>
+      <tr><th></th>
+        {{template "ratingHeader"}}
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Overall experience</td>{{template "ratingRow" .Data.Experience}}</tr>
+      <tr><td>Pre-event promotion</td>{{template "ratingRow" .Data.Promotion}}</tr>
+      <tr><td>Online registration</td>{{template "ratingRow" .Data.Registration}}</tr>
+      <tr><td>On-site check-in</td>{{template "ratingRow" .Data.Checkin}}</tr>
+      <tr><td>Midway</td>{{template "ratingRow" .Data.Midway}}</tr>
+      <tr><td>Lunch</td>{{template "ratingRow" .Data.Lunch}}</tr>
+      <tr><td>Facilities</td>{{template "ratingRow" .Data.Facilities}}</tr>
+      <tr><td>Website (seaptc.org)</td>{{template "ratingRow" .Data.Website}}</tr>
+      <tr><td>Signage and wayfinding</td>{{template "ratingRow" .Data.SignageWayfinding}}</tr>
+    </tbody>
+  </table>
+
+  {{with .Data.Comments}}
+    <h6 id="comments">Comments</h6>
+    <ul class="smaller-text mb-3">{{range .}}<li>{{.}}{{end}}</ul>
+  {{end}}
+
+  {{with .Data.LearnTopics}}
+     <h6 id="learn">What new subject should we add to the PTC next year?</h6>
+    <ul class="smaller-text mb-3">{{range .}}<li>{{.}}{{end}}</ul>
+  {{end}}
+
+  {{with .Data.TeachTopics}}
+    <h6 id="teach">Is there a subject you would like to teach at next year's PTC?</h6>
+    <ul class="smaller-text mb-3">{{range .}}<li>{{.}}{{end}}</ul>
+  {{end}}
+
+  {{with .Data.Marketing}}
+    <h6 id="marketing">How did you learn about the PTC?</h6>
+    <ul class="list-unstyled smaller-text">{{range .}}<li>{{printf "%d:" .Count}} {{.Text}}{{end}}</ul>
+  {{end}}
+
+  {{with .Data.ScoutingYears}}
+    <h6 id="years">How many years have you been in scouting?</h6>
+    <table class="table table-sm smaller-text">
+      <thead><tr><th>Years</th><th>Count</th></tr></thead>
+      <tbody>{{range .}}<tr><td>{{.Text}}</td><td>{{printf "%d" .Count}}</td></tr>{{end}}</tbody>
+    <table>
+  {{end}}
+
+  <h4 id="classes" style="page-break-before: always">Class Summary</h4>
+  <table class="table table-sm smaller-text">
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th class="text-right">#Reg</th>
+      <th class="text-right">#Eval</th>
+      <th class="text-right">NR</th>
+      <th class="text-right">1</th>
+      <th class="text-right">2</th>
+      <th class="text-right">3</th>
+      <th class="text-right">4</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{range $c := .Data.Classes}}
+    <tr>
+      <td rowspan="{{.Length}}"><a href="#class{{.Number}}">{{.Number}}</a>: {{.Title}}<br><span class="text-muted">{{join .InstructorNames ", "}}</span></td>
+      {{range $i, $s := .Sessions}}
+        {{if $i}}<tr>{{end}}
+        <td class="text-right">{{$c.Registered}}</td>
+        <td class="text-right">{{.EvaluationCount}}</td>
+        {{range .Overall.Percentages}}<td class="text-right">{{printf "%.0f%%" .Percent}}</td>{{end}}
+      </tr>
+    {{end}}
+  {{end}}
+  </tbody>
+  </table>
+
+  {{range $c := .Data.Classes}}
+    <h4 class="mt-4" style="page-break-before: always" id="class{{.Number}}">{{.Number}}: {{.Title}}</h4>
+    <p>Instructors: {{join .InstructorNames ", "}}<br>
+    Participants: {{$c.Registered}} registered
+
+    <p class="smaller-text">Ratings are: NR (not recorded), 1 (poor), 2, 3, 4
+    (great!). Instructor self assessment ratings are not included in the
+    report. Instructor comments are included and are marked as such. 
+
+    {{range $i, $s := .Sessions}}
+      <div class="mb-4">
+      <div style="page-break-inside: avoid;">
+      <h5>Part {{add $i 1}} of {{$c.Length}} <small class="text-muted">({{.EvaluationCount}} evaluations submitted)</small></h5>
+      {{if .EvaluationCount}}
+        <table class="table table-sm table-bordered mb-3 smaller-text">
+          <thead>
+            <tr>
+              <th></th>
+              {{template "ratingHeader"}}
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Presentation</td>{{template "ratingRow" .Presentation}}</tr>
+            <tr><td>Instructor's Knowledge</td>{{template "ratingRow" .Knowledge}}</tr>
+            <tr><td>Usefulness of Topic</td>{{template "ratingRow" .Usefulness}}</tr>
+            <tr><td>Class Overall</td>{{template "ratingRow" .Overall}}</tr>
+          </tbody>
+        </table>
+        </div>
+        {{with .Comments}}
+          <h6 style="page-break-after: avoid">Comments</h6>
+          <ul class="smaller-text mb-3">
+            {{range .}}<li>{{if .IsInstructor}}<b>Instructor:</b> {{end}}{{.Text}}{{end}}
+          </ul>
+        {{end}}
+      {{else}}
+        <p>No evaluations for this session.
+      {{end}}
+      </div>
+    {{end}}
+  {{end}}
+
+
+{{end}}
+
+
+{{define "ratingHeader"}}
+  <th class="text-right border-right-0">NR</th><th class="border-left-0"></th>
+  <th class="text-right border-right-0">1</th><th class="border-left-0"></th>
+  <th class="text-right border-right-0">2</th><th class="border-left-0"></th>
+  <th class="text-right border-right-0">3</th><th class="border-left-0"></th>
+  <th class="text-right border-right-0">4</th><th class="border-left-0"></th>
+{{end}}
+
+{{define "ratingRow"}}
+  {{with .Percentages}}
+    {{range .}}<td class="text-right border-right-0">{{.Count}}</td><td class="text-right border-left-0">{{printf "%.0f%%" .Percent}}</td>{{end}}
+  {{end}}
+{{end}}
+
+{{define "percentGraph"}}
+  <td class="percent-graph">
+    {{- range $i, $p := . -}}
+      {{if .Count}}<div class="rating-{{$i}}" style="width: {{.Percent}}%" title="{{printf "%d responses, %.0f%%" .Count .Percent}}">{{.Name}}</div>{{end}}
+    {{- end -}}
+  </td>
+{{end}}

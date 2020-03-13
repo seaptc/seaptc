@@ -1,0 +1,6 @@
+{{define "body"}}
+  <p>{{.Data.Message}}
+  {{if and (eq .Data.Status 403) (not .IsStaff)}} 
+    <p><a class="btn btn-outline-secondary" href="/dashboard/login">Staff Login</a>
+  {{end}}
+{{end}}

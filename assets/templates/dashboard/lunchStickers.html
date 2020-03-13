@@ -1,0 +1,88 @@
+{{define "ROOT"}}{{with .Data}}<!DOCTYPE html>
+<html> 
+<head> 
+<link rel="stylesheet" href="{{staticFile "/normalize.css"}}">
+<style>
+body {
+  font-family: Helvetica, Arial;
+  font-size: 12pt;
+}
+@media print {
+  @page {
+    size: letter;
+    margin: 0
+  }
+  #screenHeader {
+    display: none;
+  }
+}
+@media screen {
+  body {
+    background-color: lightgray;
+  }
+  .page {
+    margin-top: 0.25in;
+    margin-left: 0.25in;
+    background-color: white;
+    width: 8.50in;
+    height: 11in;
+    box-shadow: 5px 5px 5px gray;
+  }
+  #screenHeader {
+    display: block;
+  }
+}
+#screenHeader {
+  padding: 20px 0 20px 0.25in;
+  background-color: white;
+  box-shadow: 5px 5px 5px gray;
+}
+.page {
+  page-break-after: always;
+  padding-top: {{.Top}};
+  padding-left: {{.Left}};
+  display: block;
+}
+.row {
+  width: 100%;
+}
+.cell {
+  width: {{.Width}};
+  height: {{.Height}};
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding-right: {{.Gutter}};
+  font-size: {{.Font}};
+}
+</style>
+</head>
+<body>
+<div id="screenHeader">
+<form>
+  <table>
+  <tr><td><label for="rows">Rows</label></td><td><input type="input" id="rows" name="rows" value="{{.Rows}}"></td></tr>
+  <tr><td><label for="columns">Columns</label></td><td><input type="input" id="columns" name="columns" value="{{.Columns}}"></td></tr>
+  <tr><td><label for="top">Top</label></td><td><input type="input" id="top" name="top" value="{{.Top}}"></td></tr>
+  <tr><td><label for="left">Left</label></td><td><input type="input" id="left" name="left" value="{{.Left}}"></td></tr>
+  <tr><td><label for="gutter">Gutter</label></td><td><input type="input" id="gutter" name="gutter" value="{{.Gutter}}"></td></tr>
+  <tr><td><label for="width">Width</label></td><td><input type="input" id="width" name="width" value="{{.Width}}"></td></tr>
+  <tr><td><label for="height">Height</label></td><td><input type="input" id="height" name="height" value="{{.Height}}"></td></tr>
+  <tr><td><label for="font">Font</label></td><td><input type="input" id="font" name="font" value="{{.Font}}"></td></tr>
+  <tr><td></td><td><button type="submit">Update</button> <button onclick="window.print(); return false;">Print</button></tr></td>
+  </table>
+</form>
+</div>
+{{range .Pages}}
+  <div class="page">
+    {{range .}}
+      <div class="row">
+        {{range .}}
+          <div class="cell">{{.Name}}<br><small>{{.DietaryRestrictions}}<br>{{with call $.Data.Lunch .}}{{.Name}} @ {{.Location}}{{end}}</small></div>
+        {{end}}
+      </div>
+    {{end}}
+  </div>
+{{end}}
+
+{{end}}{{end}}

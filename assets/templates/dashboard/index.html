@@ -1,0 +1,55 @@
+{{define "body"}}{{with .Data}}
+
+<p>Visit the Program and Training Conference public website at <a href="https://seattlebsa.org/ptc">seattlebsa.org/ptc</a>.
+
+<table style="width: auto;" class="table table-condensed">
+<thead>
+<tr><th><br>Councils</th><th class="text-right"></th></tr>
+</thead>
+<tbody>
+{{range $name, $count := .Councils}}
+  <tr><td>{{with $name}}{{.}}{{else}}Other{{end}}</td><td class="text-right">{{$count}}</td></tr>
+{{end}}
+<tr><td>Total</td><td class="text-right">{{.Total}}</td></tr>
+</tbody>
+
+<thead>
+<tr><th><br>Districts</th><th class="text-right"></th></tr>
+</thead>
+<tbody>
+{{range $name, $units := .Districts}}{{if $name}}
+   <tr><td><a href="#{{$name}}">{{$name}}</a></td><td class="text-right">{{index $units ""}}</td></tr>
+{{end}}{{end}}
+</tbody>
+
+{{if $.IsStaff}}
+  <thead>
+  <tr><th><br>Registration Type</th><th class="text-right"></th></tr>
+  </thead>
+  <tbody>
+  {{range $name, $count := .Types}}
+    <tr><td>{{$name}}</td><td class="text-right">{{$count}}</td></tr>
+  {{end}}
+  <tr><td>Total</td><td class="text-right">{{.Total}}</td></tr>
+  </tbody>
+{{end}}
+
+{{range $name, $units := .Districts}}
+  {{if $name}}
+    <thead >
+    <tr><th><br><a name="{{$name}}">{{$name}}{{if not (eq $name "Council")}} District{{end}}</a></th><th class="text-right"><br>{{index $units ""}}</th></tr>
+    </thead>
+    <tbody>
+    {{range $uname, $count := $units}}
+      {{if $uname}}
+        <tr><td>{{$uname}}</td><td class="text-right">{{$count}}</td></tr>
+      {{end}}
+    {{end}}
+    </tbody>
+  {{end}}
+{{end}}
+
+</table>
+
+
+{{end}}{{end}}

@@ -1,0 +1,100 @@
+{{define "title"}}{{.Data.Participant.Name}} Evaluation{{end}}
+
+{{define "body"}}
+<h3 class="mb-4"><a href="/dashboard/participants/{{.Data.Participant.ID}}">{{.Data.Participant.Name}}</a></h3>
+{{if $.HasInvalidInput}}<div class="alert alert-danger" role="alert"><strong>Eek!</strong> Fix the errors noted below and try again.</div>{{end}}
+<form method="POST" class="mb-3" autocomplete="off">
+  {{range $session, $se := .Data.SessionEvaluations}}
+    <input type="hidden" name="hash{{$session}}" value="{{$.RFormValue (printf "hash%d" $session)}}">
+    <input type="hidden" name="update{{$session}}" value="{{$.RFormValue (printf "update%d" $session)}}">
+    <div class="mb-3">
+      <h5>Session {{add $session 1}}{{with $.RFormValue (printf "update%d" $session)}} <small class="text-muted float-right">{{.}}</small>{{end}}</h5>
+      <div class="form-row mb-2">
+        <select class="form-control form-control-sm {{$.InvalidClass (printf "class%d" $session)}}" name="class{{$session}}">
+          {{if not $se.ClassNumber}}
+            <option value="0" selected>No Class</option>
+            {{with index $.Data.Classes $session}}
+              {{if .Number}}
+                <option value="{{.Number}}">{{.NumberDotPart}}: {{.Title}}</option>
+              {{- end}}
+            {{- end}}
+          {{- else}}
+            <option value="-1">No Class</option>
+          {{- end}}
+          <option disabled>_________</option>
+          {{range index $.Data.Sessions $session -}}
+            <option value="{{.Number}}" {{if eq .Number $se.ClassNumber}}selected{{end}}>{{.NumberDotPart}}: {{.Title}}</option>
+          {{- end}}
+         </select>
+      </div>
+      <div class="form-row mb-2">
+        <div class="col-3">
+          {{- template "classRating" args $ "knowledge" "Knowledge" $session}}
+          {{- template "classRating" args $ "presentation" "Presentation" $session}}
+          {{- template "classRating" args $ "usefulness" "Usefulness" $session}}
+          {{- template "classRating" args $ "overall" "Overall" $session}}
+        </div>
+        <div class="col-9">
+          <textarea class="form-control form-control-sm" name="comments{{$session}}" rows="6">{{$se.Comments}}</textarea>
+        </div>
+      </div>
+    </div>
+  {{- end}}
+  <div class="mb-3">
+    <h5>Conference{{with $.RFormValue "updatec"}} <small class="text-muted float-right">{{.}}</small>{{end}}</h5>
+    <input type="hidden" name="hashc" value="{{$.RFormValue "hashc"}}">
+    <input type="hidden" name="updatec" value="{{$.RFormValue "updatec"}}">
+    {{- template "confRating" args $ "experience" "Overall experience"}}
+    {{- template "confRating" args $ "promotion" "Promotion"}}
+    {{- template "confRating" args $ "registration" "Online registration"}}
+    {{- template "confRating" args $ "checkin" "Check-in process"}}
+    {{- template "confRating" args $ "midway" "Midway"}}
+    {{- template "confRating" args $ "lunch" "Lunch"}}
+    {{- template "confRating" args $ "facilities" "Facilities"}}
+    {{- template "confRating" args $ "website" "Mobile website seaptc.org"}}
+    {{- template "confRating" args $ "signageWayfinding" "Signage and wayfinding"}}
+    {{- $ce := $.Data.ConferenceEvaluation}}
+    <div class="form-group">
+      <labeL>Learn Topics</label>
+      <textarea class="form-control form-control-sm" name="learnTopics" rows="2">{{$ce.LearnTopics}}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Teach Topics</label>
+      <textarea class="form-control form-control-sm" name="teachTopics" rows="2">{{$ce.TeachTopics}}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Comments</label>
+      <textarea class="form-control form-control-sm" name="confComments" rows="6">{{$ce.Comments}}</textarea>
+    </div>
+  </div>
+  {{- $en := $.Data.EvaluationNote}}
+  <input type="hidden" name="hashn" value="{{$.FormValue "hashn"}}">
+  <div class="form-group mb-3">
+    <label>Staff Note</label>
+    <textarea class="form-control form-control-sm" name="note" rows="6">{{$en.Text}}</textarea>
+  </div>
+  <div class="form-check mb-3">
+    <input type="checkbox" class="col form-check-input" name="noShow" {{if $en.NoShow}}checked{{end}}>
+    <label class="col">No Show</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Update</button>
+  <a class="btn btn-secondary" href="{{$.Data.Redirect}}">Cancel</a>
+</form>
+{{- end}}
+
+{{define "classRating"}}{{$root := index . 0}}{{$baseName := index . 1}}{{$label := index . 2}}{{$session := index . 3}}
+  {{- $name := printf "%s%d" $baseName $session}}
+  <div class="form-row">
+    <label class="col-8 text-truncate col-form-label" for="{{$name}}">{{$label}}</label>
+    <div class="col-4">
+      <input type="text" class="form-control form-control-sm {{$root.InvalidClass $name}}" value="{{$root.RFormValue $name}}" id="{{$name}}" name="{{$name}}">
+    </div>
+  </div>
+{{- end}}
+   
+{{define "confRating"}}{{$root := index . 0}}{{$name := index . 1}}{{$label := index . 2}}
+  <div class="form-row form-group">
+    <label class="col-8 col-sm-6 col-md-4 col-lg-3 col-form-label" for="{{$name}}">{{$label}}</label>
+    <div class="col-1"><input type="text" class="form-control form-control-sm {{$root.InvalidClass $name}}" value="{{$root.RFormValue $name}}" id="{{$name}}" name="{{$name}}"></div>
+  </div>
+{{- end}}

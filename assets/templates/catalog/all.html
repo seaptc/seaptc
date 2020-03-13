@@ -1,0 +1,84 @@
+{{define "title"}}Progam &amp; Tranining Conference: Class Catalog{{end}}
+{{define "body"}}
+<h2>Class Catalog</h2>
+
+<p>You are welcome to take any classes at PTC that interest you.
+
+<p>When registering for the conference, you can select a class for each
+session. Some classes run for more than one session.
+
+<p>Jump to: 
+  <a href="#am">Morning Schedule</a> &middot; 
+  <a href="#pm">Afternoon Schedule</a> &middot; 
+  <a href="#desc">Class Descriptions</a> 
+
+{{template "register" .}}
+
+<h4 id="am">Morning Schedule</h4>
+
+<p>
+7:40 AM - 8:15 AM: Check-in and Late Registration<br>
+8:15 AM- 8:45 AM: Opening Ceremony<br>
+9:00 AM- 1:15 PM: Class Sessions and Lunch
+</p>
+
+<table class="table table-bordered">
+<thead>
+<tr class="session-table-color">
+  <th width="33%" >Session #1<br>9:00 AM - 10:00 AM</th>
+  <th width="33%" >Session #2<br>10:10 AM - 11:10 AM</th>
+  <th width="33%" >Session #3 &amp; Lunch<br>11:20 AM - 1:15 PM</th>
+</tr>
+</thead>
+<tbody>
+{{range .Data.Morning}}
+  <tr>
+    {{- range .}}
+      {{- if .}}<td width="33%" colspan="{{.Length}}" >
+       {{- if .Number}}
+          <a href="#c{{.Number}}">{{.Number}}</a> {{.Title}}{{with .TitleNote}} ({{.}}){{end}}
+          {{- if .Flag}} <span style="float:right" title="class continues after lunch">&rarr;</span>{{end}}
+       {{- end}}</td>
+      {{- end}}
+    {{- end}}
+  </tr>
+{{end}}
+</tbody>
+</table>
+
+<h4 id="pm">Afternoon Schedule</h4>
+
+<table class="table table-bordered">
+<thead>
+<tr class="session-table-color">
+  <th width="33%" >Session #4<br>1:25 PM - 2:25 PM</th>
+  <th width="33%" >Session #5<br>2:35 PM - 3:35 PM</th>
+  <th width="33%" >Session #6<br>3:45 PM - 4:45 PM</th>
+</tr>
+</thead>
+<tbody>
+{{range .Data.Afternoon}}
+  <tr>
+    {{- range .}}
+      {{- if .}}<td width="33%" colspan="{{.Length}}" >
+       {{- if .Number}}
+          {{- if .Flag}} <span title="continuation of morning class">&rarr;</span>{{end}}
+          <a href="#c{{.Number}}">{{.Number}}</a> {{.Title}}{{with .TitleNote}} ({{.}}){{end}}
+       {{- end}}</td>
+      {{- end}}
+    {{- end}}
+  </tr>
+{{end}}
+</tbody>
+</table>
+
+{{template "register" .}}
+
+<h4 id="desc" >Class Descriptions</h4>
+<table class="table">
+{{range .Data.Classes}}{{template "classDesc" .}}{{end}}
+</table>
+
+{{template "key" .Data.Key}}
+
+{{end}}

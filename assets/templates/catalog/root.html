@@ -1,0 +1,148 @@
+{{define "ROOT"}}
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="google" content="notranslate">
+  <link rel="stylesheet" href="{{staticFile "bootstrap.min.css"}}">
+  <style>body { font-family: "Ubuntu"; }</style>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+  <title>{{block "title" $}}Program and Training Conference{{end}}</title>
+  <style>
+    .sticky-offset {
+      top: 107px;
+    }
+  
+    .navbar-scout-color {
+      background-color: #003f87;
+    }
+  
+    .navbar-background {
+      background-color: #f0f0f0ff;
+      padding: 5px;
+    }
+  
+    .session-table-color {
+      background: #e3e3e3;
+    }
+  
+    .mobile-sidebar {
+      right: 40px;
+      top: 60px;
+    }
+  </style>
+</head>
+
+<body id="top">
+  <nav class="navbar-fluid sticky-top navbar-background">
+    <div class="container">
+      <div class="row">
+        <div class="ml-1 d-md-none">
+          <img width="250" src="/static/BSACSCLogoV5.png" />
+        </div>
+        <div class="ml-1 d-none d-md-block">
+          <img width="300" src="/static/BSACSCLogoV5.png" />
+        </div>
+        <div id="sidebar-mobile" class="d-md-none ml-auto mr-1">
+          <nav class="navbar navbar-light">
+            <button class="navbar-toggler navbar-light" type="button" data-toggle="collapse"
+              data-target="#MobileSidebar" aria-controls="navbarToggleExternalContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="container navbar-dark navbar-scout-color">
+      <a class="navbar-brand ml-auto d-flex justify-content-center"
+        href="https://seattlebsa.org/ptc">{{$.Conference.Date.Format "2006"}}
+        Program &amp; Training Conference</a>
+      <ul class="navbar-nav mr-auto">
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-lg-9">
+        {{with $.Conference.Configuration.CatalogStatusMessage}}<div class="alert alert-warning my-3">{{.}}</div>{{end}}
+        {{block "body" $}}{{end}}
+      </div>
+      <div id="sidebar" class="col-md-4 col-lg-3 d-none d-md-block sidebar-expanded">
+        <div class="list-group sticky-top sticky-offset">
+          <a href="https://seattlebsa.org/ptc" class="list-group-item list-group-item-action">PTC Home &rarr;</a>
+          {{with $.Conference.Configuration.RegistrationURL}}
+            <a href="{{.}}" class="list-group-item list-group-item-action">Register &rarr;</a>
+          {{end}}
+          <a href="/catalog" class="list-group-item list-group-item-action">All Classes</a>
+          <a href="/catalog/new" class="list-group-item list-group-item-action">New for {{$.Conference.Date.Format "2006"}}</a>
+          <a href="/catalog/cub" class="list-group-item list-group-item-action">Cub Scout Adults</a>
+          <a href="/catalog/bsa" class="list-group-item list-group-item-action">Scouts BSA Adults</a>
+          <a href="/catalog/ven" class="list-group-item list-group-item-action">Venturing Adults</a>
+          <a href="/catalog/sea" class="list-group-item list-group-item-action">Sea Scout Adults</a>
+          <a href="/catalog/com" class="list-group-item list-group-item-action">Commissioner</a>
+          <a href="/catalog/you" class="list-group-item list-group-item-action">Youth</a>
+        </div>
+      </div>
+    </div>
+    <div id="sidebar-mobile" class="d-md-none">
+      <div id="MobileSidebar" class="list-group sticky-top mobile-sidebar position-fixed collapse ml-auto">
+        <a href="https://seattlebsa.org/ptc" class="list-group-item list-group-item-action">PTC Home &rarr;</a>
+        {{with $.Conference.Configuration.RegistrationURL}}
+          <a href="{{.}}" class="list-group-item list-group-item-action">Register &rarr;</a>
+        {{end}}
+        <a href="/catalog" class="list-group-item list-group-item-action">All Classes</a>
+        <a href="/catalog/new" class="list-group-item list-group-item-action">New for 2019</a>
+        <a href="/catalog/cub" class="list-group-item list-group-item-action">Cub Scout Adults</a>
+        <a href="/catalog/bsa" class="list-group-item list-group-item-action">Scouts BSA Adults</a>
+        <a href="/catalog/ven" class="list-group-item list-group-item-action">Venturing Adults</a>
+        <a href="/catalog/sea" class="list-group-item list-group-item-action">Sea Scout Adults</a>
+        <a href="/catalog/com" class="list-group-item list-group-item-action">Commissioner</a>
+        <a href="/catalog/you" class="list-group-item list-group-item-action">Youth</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{staticFile "jquery.min.js"}}"></script>
+  <script src="{{staticFile "bootstrap.min.js"}}"></script>
+  <script src="{{staticFile "site.js"}}"></script>
+  <script src="{{staticFile "catalog.js"}}"></script>
+</body>
+
+</html>
+{{end}}
+
+
+{{define "classDesc"}}<tr>
+  <th valign="top" id="c{{.Number}}">{{.Number}}</th>
+  <td valign="top">
+    {{range .ProgramDescriptions true}}<img style="float:right;" src="https://seaptc.org/static/program/{{.Code}}.png"
+      title="{{.Name}}">{{end}}
+    <strong>{{with .New}}<font color="red">{{.}}</font> {{end}}{{.Title}}{{with .TitleNote}} ({{.}}){{end}}</strong>
+    &mdash; {{.Description}}
+    <em>(
+      {{- if le .Length 1}}1&nbsp;hour, session&nbsp;{{add .End 1}}
+      {{- else if ge .Length 6}}all&nbsp;day, sessions&nbsp;1&nbsp;&ndash;&nbsp;6
+      {{- else}}{{.Length}}&nbsp;hours, sessions&nbsp;{{add .Start 1}}&nbsp;&ndash;&nbsp;{{add .End 1}}
+      {{- end -}}
+      )</em>
+  </td>
+</tr>
+{{end}}
+
+{{define "key" -}}
+<h4 id="key">Program Icon Key</h4>
+<table class="table">
+  {{- range .}}<tr>
+    <td><img src="/static/program/{{.Code}}.png"></td>
+    <td>{{.TitleName}}</td>
+  </tr>{{- end}}
+</table>
+{{- end}}
+
+{{define "register"}}{{with .Conference.Configuration.RegistrationURL}}<p><a href="{{.}}" class="btn btn-primary btn-large">Register Now!</a>{{end}}{{end}}
+  

@@ -1,0 +1,19 @@
+{{define "body"}}
+{{if $.HasInvalidInput}}<div class="alert alert-danger">Invalid login code. Correct the code and try again.</div>{{end}}
+<form class="mb-3 mt-3" action="/login" method="POST">
+  <div>
+    <label for="loginCode">
+      To view your schedule and enter class evaluations, login with the code
+      printed on your name tag and your personal schedule.
+    </label>
+  </div>
+  <div class="row">
+    <div class="col-6 col-sm-5 col-md-4 col-lg-3">
+      <input class="form-control {{$.InvalidClass "loginCode"}}" value="{{$.FormValue "loginCode"}}" name="loginCode" type="number" autocomplete="off">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-secondary">Login</button>
+    </div>
+  </div>
+</form>
+{{end}}

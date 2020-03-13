@@ -1,0 +1,53 @@
+{{define "title"}}PTC: Class {{$.Data.Class.Number}}{{end}}
+
+{{define "body"}}{{with .Data}}
+<h3>{{.Class.Number}}: {{.Class.Title}}</h3>
+<p>
+<table class="mb-3 table-sm">
+  <tr><th>Catalog</th><td><a href="/catalog/#c{{.Class.Number}}">/catalog/#c{{.Class.Number}}</a></td></tr>
+  <tr><th>Session</th><td>{{add .Class.Start 1}}{{if gt .Class.Length 1}} &ndash; {{add .Class.End 1}}{{end}}</td></tr>
+  {{with .Lunch}}
+    <tr><th>Lunch</th><td>{{.Name}}{{with .Location}} @ {{.}}{{end}}</td></tr>
+  {{end}}
+  {{if  and $.IsStaff .InstructorURL}}
+    <tr><th valign="top">Instructor link</th><td valign="top"><a href="{{.InstructorURL}}">{{.InstructorURL}}</a></td></tr>
+  {{end}}
+  {{if .InstructorView}}
+    <tr><th valign="top">Location</th><td valign="top">{{with .Class.Location}}{{.}} (location is not final until the Friday morning before the event){{else}}Location not assigned{{end}}</td></tr>
+    <tr><th valign="top">Capacity</th><td valign="top">{{.Class.Capacity}}</td></tr>
+    <tr><th valign="top">Instructors</th><td valign="top">{{join .Class.InstructorNames ", "}}<br>{{join .Class.InstructorEmails ", "}}</td></tr>
+    <tr><th valign="top">Evaluation codes</th><td valign="top">{{join .Class.EvaluationCodes ", "}}</td></tr>
+    <tr><th>Participants</th><td>{{len .Participants}}</td></tr>
+    <tr><th valign="top">Participant emails</th><td valign="top">
+      <a href="mailto:?bcc={{join .ParticipantEmails ","}}">{{join .ParticipantEmails ", "}}</a>
+    </td></tr>
+  {{end}}
+  {{if $.IsStaff}}
+    <tr><th valign="top">Responsibility</th><td valign="top">{{.Class.Responsibility}}</td></tr>
+  {{end}}
+</table>
+<p>
+{{if and .InstructorView .Participants}}
+  <table class="table table-sm table-hover">
+    <thead>
+      <tr>
+        <th>{{$.Sort "Name" "!name"}}</th>
+        <th>{{$.Sort "Type" "type"}}</th>
+        <th>{{$.Sort "Council" "unit"}}</th>
+        <th>{{$.Sort "District" "unit"}}</th>
+        <th>{{$.Sort "Unit" "unit"}}</th>
+      </tr>
+    <thead>
+    <tbody>
+      {{range .Participants}}<tr>
+        <td class="text-nowrap">{{if $.IsStaff}}<a href="/dashboard/participants/{{.ID}}">{{.Name}}</a>{{else}}{{.Name}}{{end}}</td>
+        <td class="text-nowrap">{{.Type}}</td>
+        <td class="text-nowrap">{{.Council}}</td>
+        <td class="text-nowrap">{{.District}}</td>
+        <td class="text-nowrap">{{.Unit}}</td>
+      </tr>{{end}}
+    </tbody>
+  </table>
+{{end}}
+
+{{end}}{{end}}

@@ -1,0 +1,15 @@
+{{define "title"}}Enter Evaluation{{end}}
+{{define "body"}}
+<h3>Enter Evaluation</h3>
+{{if $.HasInvalidInput}}<div class="mb-3 alert alert-danger">Invalid login code. Correct the number and try again.</div>{{end}}
+<form class="mb-3">
+  <div class="form-group">
+    <label for="loginCode">Login Code</label>
+    <input type="number" class="form-control {{$.InvalidClass "loginCode"}}" 
+      autocomplete="off" id="loginCode" name="loginCode" 
+      value="{{$.FormValue "loginCode"}}" placeholder="code">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <a class="btn btn-secondary" href="/dashboard">Cancel</a>
+</form>
+{{end}}

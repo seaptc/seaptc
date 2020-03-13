@@ -1,0 +1,47 @@
+{{define "title"}}PTC: Adminstration{{end}}
+{{define "body"}}
+
+{{template "refreshClassesButton" $}}
+
+<p><b>Lunch:</b> <a href="/dashboard/lunchCount">Count</a>
+  {{if $.IsAdmin}}
+    | <a href="/dashboard/lunchList">List</a>
+    | <a href="/dashboard/lunchStickers">Stickers</a>
+  {{end}}
+
+<p><b>Misc:</b> <a href="/dashboard/classrooms">Classrooms</a>
+
+<p><b>Forms:</b> <a href="/dashboard/reprintForms" title="Pick particpants for form reprint">Reprint</a>
+  {{if $.IsAdmin}}
+    | <a href="/dashboard/forms?options=batch" title="Print next batch of forms">Print</a>
+    | <a href="/dashboard/forms?options=auto" title="Print button clicked on load, refresh clicked after print">Automated Print</a>
+    | <a href="/dashboard/forms?options=first" title="Show all forms sorted by descending length of first name">Debug First</a>
+    | <a href="/dashboard/forms?options=last" title="Show all forms sorted by descending length of last name">Debug Last</a>
+    | <a href="/dashboard/blankForm" title="Print blank form">Blank</a>
+  {{end}}
+
+<div class="mb-3"><b>Evaluations:</b>
+  <form class="d-inline form-inline" action="/dashboard/evalCode">
+    <input type="submit" class="d-none">
+    <input type="number" class="form-control form-control-sm" autocomplete="off"  name="loginCode" placeholder="enter login code">
+  </form>
+  | <a href="/dashboard/report">Report</a>
+</div>
+
+{{if $.IsAdmin}}
+  <p><b>Edit:</b> <a href="/dashboard/configuration">Configuration</a>
+
+  <form class="form-inline mb-3" action="/dashboard/uploadRegistrations" enctype="multipart/form-data" method="POST">
+    <div class="input-group form-group">
+      <div class="custom-file">
+        <input type="file" id="file" name="file" class="custom-file-input" required>
+        <label class="custom-file-label form-control mr-2" for="file">Choose File</label>
+      </div>
+      <div class="input-group-append">
+        <button type="submit" class="input-group-text">Upload Registrations</button>
+      </div>
+    </div>
+  </form>
+{{end}}
+
+{{end}}

@@ -1,0 +1,17 @@
+{{define "title"}}Progam &amp; Tranining Conference: New Classes{{end}}
+{{define "body"}}
+<h2>New</h2>
+
+<p>Here's a list of what's new at the {{$.Conference.Date.Format "2006"}}
+Program &amp; Training Conference.  See <a href="/catalog">this page</a> for a
+list of all classes.
+
+{{template "register" .}}
+
+<h4>Class Descriptions</h4>
+<table class="table">
+{{range .Data.Classes}}{{if .New}}{{template "classDesc" .}}{{end}}{{end}}
+</table>
+
+{{template "key" .Data.Key}}
+{{end}}

@@ -1,0 +1,40 @@
+{{define "title"}}PTC: Participants{{end}}
+{{define "body"}}
+<h3>Participants</h3>
+<p>
+<table class="table table-sm mb-4">
+  <thead>
+    <tr>
+      {{if .IsStaff}}
+        <th>{{$.Sort "Name" "!name"}}</th>
+      {{end}}
+      <th>{{$.Sort "Type" "type"}}</th>
+      <th>{{$.Sort "Council" "council"}}</th>
+      <th>{{$.Sort "District" "district"}}</th>
+      <th>{{$.Sort "Unit" "unit"}}</th>
+      <th colspan="6">Classes</th>
+    </tr>
+  <thead>
+  <tbody>
+    {{- range $.Data.Participants -}}
+      <tr>
+        {{- if $.IsStaff}}
+          <td class="text-nowrap"><a href="/dashboard/participants/{{.ID}}">{{.Name}}</a></td>
+        {{- end}}
+        <td class="text-nowrap">{{with .StaffRole}}{{.}}{{else}}{{.Type}}{{end}}</td>
+        <td class="text-nowrap">{{.Council}}</td>
+        <td class="text-nowrap">{{.District}}</td>
+        <td class="text-nowrap">{{.UnitType}}{{if $.IsStaff}} {{.UnitNumber}}{{end}}</td>
+        {{- range call $.Data.SessionClasses . -}}<td class="text-right" {{if .Number}}title="{{if .Instructor}}Instructor {{end}}{{.Number}}: {{.Title}}"{{end}}>
+            {{- if .Instructor}}<b>{{end -}}
+            {{- with .Number -}}
+              <a href="/dashboard/classes/{{.}}">{{printf "%03d" .}}</a>
+            {{- end -}}
+            {{- if .Instructor}}</b>{{end -}}
+          </td>
+        {{- end -}}
+      </tr>
+    {{- end}}
+  </tbody>
+</table>
+{{end}} 

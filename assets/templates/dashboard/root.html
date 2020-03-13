@@ -1,0 +1,44 @@
+{{define "ROOT"}}<!DOCTYPE html><html lang="en-US">
+<head> 
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="google" content="notranslate">	
+  <link rel="stylesheet" href="{{staticFile "bootstrap.min.css"}}">
+  {{block "head" $}}{{end}}
+  <title>{{block "title" $}}Program and Training Conference{{end}}</title>
+</head>
+<body>
+  {{$path := .Request.URL.Path}}
+  <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-3 d-print-none">
+    <div class="container">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link {{if eq $path "/dashboard"}} active{{end}}" href="/dashboard">PTC</a>
+      <a class="nav-item nav-link {{if eq $path "/dashboard/classes"}} active{{end}}" href="/dashboard/classes">Classes</a>
+      {{if .IsStaff}}<a class="nav-item nav-link {{if eq $path "/dashboard/participants"}} active{{end}}" href="/dashboard/participants">Participants</a>{{end}}
+      {{if .IsStaff}}<a class="nav-item nav-link {{if eq $path "/dashboard/instructors"}} active{{end}}" href="/dashboard/instructors">Instructors</a>{{end}}
+      {{if .IsStaff}}<a class="nav-item nav-link {{if eq $path "/dashboard/admin"}} active{{end}}" href="/dashboard/admin">Admin</a>{{end}}
+    </div>
+    {{- if .IsStaff}}
+      <a class="nav-item btn btn-outline-light" href="/dashboard/logout">Logout</a>
+    {{- else}}
+      <a class="nav-item btn btn-outline-light" href="/dashboard/login?_ref={{.Request.URL.RequestURI}}">Staff Login</a>
+    {{- end -}}
+  </nav>
+  <div class="container" id="body">{{template "flash" $}}{{block "body" $}}{{end}}</div>
+  <script src="{{staticFile "jquery.min.js"}}"></script>
+  <script src="{{staticFile "popper.min.js"}}"></script>
+  <script src="{{staticFile "bootstrap.min.js"}}"></script>
+  <script src="{{staticFile "site.js"}}"></script>
+  {{block "foot" $}}{{end}}
+</body>
+</html>
+{{end}}
+
+{{define "refreshClassesButton"}}{{if $.IsStaff -}}
+    <form class="form-inline mb-3 d-print-none" action="/dashboard/refreshClasses" class="form-inline" method="post">
+      <input type="hidden" name="_ref" value="{{$.Request.URL.RequestURI}}">
+      <button type="submit" class="btn btn-outline-secondary">Refresh Classes</button>
+    </form>
+{{end}}{{end}}

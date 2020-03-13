@@ -1,0 +1,33 @@
+{{define "title"}}PTC: Classes{{end}}
+{{define "body"}}
+{{if $.IsStaff}}<div class="float-right">{{template "refreshClassesButton" $}}</div>{{end}}
+<h3>Classes</h3>
+  <p>
+  <table class="table table-sm table-hover mb-4" style="font-size: 90%">
+   <thead>
+      <tr>
+        <th>{{$.Sort "Name" "!number"}}</th>
+        {{if $.IsStaff}}<th>{{$.Sort "Location" "location"}}</th>{{end}}
+        <th>Session</th>
+        <th>Lunch</th>
+        {{if $.IsStaff}}<th title="Responsibility">{{$.Sort "Resp" "responsibility"}}</th>{{end}}
+        <th class="text-right" title="Capacity">{{$.Sort "Cap" "capacity"}}</th>
+        <th class="text-right" title="Registered">{{$.Sort "Reg" "registered"}}</th>
+        <th class="text-right" title="Available">{{$.Sort "Avail" "available"}}</th>
+      </tr>
+    <tbody>
+    {{range .Data.Classes -}}
+      <tr>
+        <td><a href="/dashboard/classes/{{.Number}}">{{.Number}}</a>: {{.ShortTitle}}</td>
+        {{if $.IsStaff}}<td class="text-nowrap">{{.Location}}</td>{{end}}
+        <td>{{add .Start 1}}{{if gt .Length 1}} &ndash; {{add .Start .Length}}{{end}}</td>
+        {{with call $.Data.Lunch .}}<td class="text-nowrap" title="{{.Name}}">{{.ShortName}}</td>{{else}}<td></td>{{end}}
+        {{if $.IsStaff}}<td class="text-nowrap" title="{{.Responsibility}}">{{truncate .Responsibility 6}}</td>{{end}}
+        <td class="text-right">{{if lt 0 .Capacity}}{{.Capacity}}{{end}}</td>
+        <td class="text-right">{{call $.Data.Registered .}}</td>
+        <td class="text-right">{{call $.Data.Available .}}</td>
+      </tr>
+    {{end}}
+    </tbody>
+  </table>
+{{end}}

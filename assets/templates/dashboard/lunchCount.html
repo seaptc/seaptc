@@ -1,0 +1,36 @@
+{{define "title"}}PTC: Lunch{{end}}
+{{define "body"}}{{with $.Data}}
+<h3>Lunch</h3>
+<p>
+<table class="table">
+ <thead>
+    <tr>
+      <th>Option</th>
+      {{range $lunch, $lunchCount := .Lunch}}
+        <th class="text-right">{{$lunch.Name}}<br>{{$lunch.Location}}</th>
+      {{end}}
+      <th class="text-right">Total</th>
+    </tr>
+  <thead>
+  <tbody>
+    {{range $option, $optionCount := .Option}}
+      <tr>
+        <td>{{if $option}}{{$option}}{{else}}&ndash;{{end}}</td>
+        {{range $lunch, $lunchCount := $.Data.Lunch}}
+          <td class="text-right">{{index $.Data.Count (printf "%s:%s" $lunch.Name $option)}}</td>
+        {{end}}
+        <td class="text-right">{{$optionCount}}</td>
+      </tr>
+    {{end}}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Total</th>
+      {{range $lunch, $lunchCount := $.Data.Lunch}}
+        <td class="text-right">{{.}}</td>
+      {{end}}
+      <td class="text-right">{{$.Data.Total}}</td>
+    </tr>
+  </tfoot>
+</table>
+{{end}}{{end}}

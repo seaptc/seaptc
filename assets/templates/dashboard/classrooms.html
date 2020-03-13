@@ -1,0 +1,53 @@
+{{define "ROOT"}}<!DOCTYPE html>
+<html> 
+<head> 
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="{{staticFile "bootstrap.min.css"}}">
+  <style>
+    .page {
+      padding: 20px;
+      page-break-after: always; 
+    }
+    .location {
+      font-size: 22pt;
+    }
+    .session td {
+      padding-right: 8px;
+      padding-top: 2px;
+      font-size: 16pt;
+    }
+    .page p {
+      margin-top: 30px;
+    }
+  </style>
+<body>
+
+{{range $location, $activities := .Data.Locations}}{{if $location}}
+  <div class="page location">
+    <h1>{{$location}}</h1>
+    {{range $activities}}
+      <p>{{.Time.StartText}} - {{.Time.EndText}}<br><b>{{.Name}}</b>
+    {{end}}
+  </div>
+{{end}}{{end}}
+
+{{range $i, $sessionClasses := .Data.Sessions}}
+  <div class="page session">
+    <h1>Session {{add 1 $i}} Rooms</h1>
+    <table>
+      {{range $sessionClasses}}
+        <tr>
+          <td>{{.Number}}: {{.ShortTitle}}{{.IofN}}</td>
+          <td>{{.Location}}</td>
+        </tr>
+      {{end}}
+    </table>
+  </div>
+{{end}}
+
+</body>
+</html>
+{{end}}

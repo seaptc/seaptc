@@ -1,0 +1,95 @@
+{{define "title"}}PTC Evaluation{{end}}
+{{define "body"}}{{with $.Data}}
+
+{{if $.HasInvalidInput}}<div class="alert alert-danger" role="alert"><strong>Eek!</strong> Fix the errors noted below and try again. </div>{{end}}
+
+<form method="POST" class="mb-3">
+  <input type="hidden" name="evalCode" value="{{$.RFormValue "evalCode"}}">
+  {{if .EvaluateSession}}
+    {{with .SessionClass}}
+      <h5>{{.Number}}: {{.ShortTitle}}{{.IofN}}</h5>
+    {{end}}
+    {{if .IsInstructor}}
+      <p>Thank you for teaching this class.
+      {{template "textarea" args $ "comments" "Comments about the session"}}
+    {{else}}
+      <p>Evaluate your session {{add .SessionClass.Session 1}} class. The items marked with a * are required.
+      {{with .SessionEvaluation}}
+        {{template "rating" args $ .KnowledgeRating "knowledge" "Instructor's knowledge of course material *" "Provide a rating for the instructor's knowledge of course material."}}
+        {{template "rating" args $ .PresentationRating "presentation" "Presentation of material *" "Provide a rating for the presentation of material."}}
+        {{template "rating" args $ .UsefulnessRating "usefulness" "Usefulness of topic *" "Provide a rating for the usefulness of topic."}}
+        {{template "rating" args $ .OverallRating "overall" "Session overall *" "Provide a rating for the session overall."}}
+        {{template "textarea" args $ .Comments "comments" "Comments about the session"}}
+      {{end}}
+    {{end}}
+    <hr>
+  {{end}}
+
+  {{if .EvaluateConference}}
+    <h5>Conference</h5>
+    {{if .EvaluateSession}}
+      <p>This is the last class of the day. Evaluate the entire Program and Training Conference.
+     {{else}}
+      <p>Evaluate the entire Program and Training Conference. Wait until you
+      are done for the day before completing this evaluation.  
+      <p><a href="/" class="btn btn-secondary">I am not done for the day</a>
+    {{end}}
+    {{with .ConferenceEvaluation}}
+      {{template "rating" args $ .ExperienceRating "experience" "Overall conference experience" ""}}
+      {{template "rating" args $ .PromotionRating "promotion" "Pre-event promotion" ""}}
+      {{template "rating" args $ .RegistrationRating "registration" "Online registration (if applicable)" ""}}
+      {{template "rating" args $ .CheckinRating "checkin" "On-site check-in process" ""}}
+      {{template "rating" args $ .MidwayRating "midway" "Midway" ""}}
+      {{template "rating" args $ .LunchRating "lunch" "Lunch" ""}}
+      {{template "rating" args $ .FacilitiesRating "facilities" "Facilities" ""}}
+      {{template "rating" args $ .WebsiteRating "website" "Mobile website (seaptc.org)" ""}}
+      {{template "rating" args $ .SignageWayfindingRating "signageWayfinding" "Signage and wayfinding" ""}}
+      {{template "text" args $ .LearnTopics "learnTopics" (noHTMLEscape "What <b>new</b> subject should we add to PTC next year?")}}
+      {{template "text" args $ .TeachTopics "teachTopics" (noHTMLEscape "Is there a subject you would like to <b>teach</b> at next year's PTC?")}}
+      {{template "textarea" args $ .Comments "confComments" "Additional Feedback"}}
+    {{end}}
+    <hr>
+  {{end}}
+
+  <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+  <a class="btn btn-secondary" href="/">Cancel</a>
+</form>
+{{end}}{{end}}
+
+{{define "rating"}}{{$root := index . 0}}{{$value := index . 1}}{{$name := index . 2}}{{$label := index . 3}}{{$feedback := index . 4}}
+  <div class="mb-4">
+    <label for="{{$name}}">{{$label}}</label>
+    <div class="form-check">
+      <input class="form-check-input {{$root.InvalidClass $name}}" type="radio" name="{{$name}}" id="{{$name}}" value="1"{{if eq $value 1}} checked{{end}}>
+      <label class="form-check-label" for="{{$name}}">1 (poor)</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input {{$root.InvalidClass $name}}" type="radio" name="{{$name}}" id="{{$name}}" value="2"{{if eq $value 2}} checked{{end}}>
+      <label class="form-check-label" for="{{$name}}">2</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input {{$root.InvalidClass $name}}" type="radio" name="{{$name}}" id="{{$name}}" value="3"{{if eq $value 3}} checked{{end}}>
+      <label class="form-check-label" for="{{$name}}">3</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input {{$root.InvalidClass $name}}" type="radio" name="{{$name}}" id="{{$name}}" value="4"{{if eq $value 4}} checked{{end}}>
+      <label class="form-check-label" for="{{$name}}">4 (great)</label>
+    </div>
+    {{if $root.InvalidClass $name}}{{with $feedback}}<div class="text-danger"><small>{{.}}</small></div>{{end}}{{end}}
+  </div>
+{{end}}
+
+{{define "text"}}{{$root := index . 0}}{{$value := index . 1}}{{$name := index . 2}}{{$label := index . 3}}
+  <div class="mb-4">
+    <label for="{{$name}}">{{$label}}</label>
+    <input type="text" class="form-control" autocomplete="off" id="{{$name}}" name="{{$name}}" value="{{$value}}">
+  </div>
+{{end}}
+
+
+{{define "textarea"}}{{$root := index . 0}}{{$value := index . 1}}{{$name := index . 2}}{{$label := index . 3}}
+  <div class="mb-4">
+    <label for="{{$name}}">{{$label}}</label>
+    <textarea class="form-control" autocomplete="off" id="{{$name}}" name="{{$name}}" rows="8">{{$value}}</textarea>
+  </div>
+{{end}}

@@ -1,0 +1,11 @@
+{{define "flash"}}{{with .FlashMessage}}
+<div class="alert alert-{{.Kind}} alert-dismissible">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  {{.Message}}
+</div>
+{{end}}{{end}}
+
+{{define "adminBlurb"}}<b>Questions?</b> PTC Administration is in the College Center lobby.{{end}}
+{{define "scoutShopBlurb"}}The <b>Scout Shop</b> is open from 7:40 AM to 5:00 PM in the College Center lobby.{{end}}
+{{define "midwayBlurb"}}Visit the <b>Midway</b> between 7:40 AM and 2:40 PM to meet representatives from scouting groups,
+programs and camps. The Midway is on the upper level of the Wellness Center.{{end}}

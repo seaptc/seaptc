@@ -1,0 +1,13 @@
+{{define "title"}}Attendance &amp; Evaluation{{end}}
+{{define "body"}}
+{{if .HasInvalidInput}}<div class="alert alert-danger">Invalid evaluation code. Correct the code and try again.</div>{{end}}
+<h5 class="mb-3">Evaluation &amp; Attendance</h5>
+<form>
+  <div class="form-group">
+    <label for="evaluationCode">Enter the four digit class evaluation and attendance code provided by the instructor.</label>
+    <input type="number" autocomplete="off" class="form-control {{$.InvalidClass "eval"}}" name="evalCode" value="{{$.FormValue "evalCode"}}" placeholder="code">
+  </div>
+  <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+  <a href="/" class="btn btn-secondary">Cancel</a>
+</form>
+{{end}}

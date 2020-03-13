@@ -1,0 +1,66 @@
+{{define "title"}}PTC: {{$.Data.Participant.Name}}{{end}}
+
+{{define "body"}}{{with .Data}}
+
+{{with .Participant}}
+
+  {{if $.IsAdmin}}
+    <a class="mx-1 float-right btn btn-outline-secondary d-print-none" href="/dashboard/forms/{{.ID}}">Form</a>
+    <a class="mx-1 float-right btn btn-outline-secondary d-print-none" href="/dashboard/evaluations/{{.ID}}?ref=p">Eval</a>
+  {{end}}
+  <h3>{{.Name}}{{with .Nickname}} ({{.}}){{end}}</h3>
+  <p>
+  <table class="mb-3 table-sm">
+    <tr><th>Reg #</th><td>{{.RegistrationNumber}}</td></tr>
+    <tr><th>Type</th><td>{{.Type}}{{with.StaffRole}} / {{.}}{{end}}</td></tr>
+    <tr><th>Unit</th><td>{{.Unit}}</td></tr>
+    <tr><th>Council / District</th><td>{{.Council}} / {{.District}}</td></tr>
+    <tr><th>Email</th><td>{{with .Emails}}<a href="mailto:{{join . ","}}">{{join . ", "}}</a>{{end}}</td></tr>
+    {{if $.IsAdmin}}
+      <tr><th>Login Code</th><td><a href="/login?loginCode={{.LoginCode}}">{{.LoginCode}}</a></td></tr>
+      <tr><th>Lunch Option</th><td>{{.LunchOption}}</td></tr>
+      <tr><th>Show QR Code</th><td>{{if .ShowQRCode}}yes{{else}}no{{end}}</td></tr>
+      <tr><th>Phone</th><td>{{.Phone}}</td></tr>
+      <tr><th>Address</th><td>{{.Address}}, {{.City}}, {{.State}} {{.Zip}}</td></tr>
+      <tr><th>BSA #</th><td>{{.BSANumber}}</td></tr>
+      <tr><th>Marketing</th><td>{{.Marketing}}</td></tr>
+      <tr><th>Scouting Years</th><td>{{.ScoutingYears}}</td></tr>
+      <tr><th>Staff Description</th><td>{{.StaffDescription}}</td></tr>
+      <tr><th>Reg Time</th><td>{{.RegistrationTime.Format "1/2/2006 15:04"}}</td></tr>
+    {{end}}
+  </table>
+{{end}}
+
+<h5>Schedule</h5>
+<p>{{range .Schedule}}
+{{if not (eq .Kind "break")}}{{.StartText}}
+  {{- if .Instructor}} <b>Instructor</b>{{end}} 
+  {{- with .ClassNumber}} <a href="/dashboard/classes/{{.}}">{{end}} {{.Description}}{{if .ClassNumber}}</a>{{end}}<br>{{end -}}
+{{end}}
+
+{{if $.IsAdmin}}
+<h5>Instructor Classes</h5>
+<form method="POST" action="/dashboard/setInstructorClasses" class="mb-4">
+  <input type="hidden" name="id" value="{{.Participant.ID}}">
+  {{range $session, $classes := $.Conference.Sessions}}
+    {{$sel := index $.Data.InstructorClasses $session}}
+    <div class="form-row">
+      <div class="col-1">
+        <label for="class{{$session}}" class="col-xs-1 col-form-label">{{add $session 1}}: </label>
+      </div>
+      <div class="col-11">
+        <select class="form-control form-control-sm" name="class{{$session}}">
+          <option value="0" {{if eq $sel 0}}selected{{end}}>&ndash;</option>
+          {{range $classes}}
+            <option value="{{.Number}}" {{if eq $sel .Number}}selected{{end}}>{{.NumberDotPart}}: {{.ShortTitle}} {{.IofN}}</option>
+          {{end}}
+        </select>
+      </div>
+    </div>
+  {{end}}
+  <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+  <a class="btn btn-secondary" href="{{$.Request.URL.Path}}">Cancel</a>
+</form>
+{{end}}
+
+{{end}}{{end}}

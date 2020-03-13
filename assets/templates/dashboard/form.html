@@ -1,0 +1,550 @@
+{{define "ROOT"}}{{with $.Data}}<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{staticFile "/normalize.css"}}">
+<style>
+
+:root {
+  --stickerLeft: -0.205in;
+  --stickerTop: 0.5in;
+  --stickerWidth: 4in;
+  --stickerHeight: 2.5in;
+  --badgeMargin: 0.125in;
+  --p1Margin: 8px;
+}
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0
+  }
+  .page {
+    margin-top: 0.375in;
+    margin-left: 0.480in;
+  }
+}
+
+body {
+  font-family: Helvetica, Arial;
+  font-size: 10pt;
+  box-sizing: content-box;
+}
+
+.page {
+  page-break-after: always;
+  position: relative;
+  height: 10.2in;
+  width: 7.5in;
+}
+
+#screenHeader {
+  display: none;
+  padding: 20px 0 20px 0.25in;
+  background-color: white;
+  box-shadow: 5px 5px 5px gray;
+}
+
+@media screen {
+  .debugOutline {
+    border: 1px dotted gray;
+  }
+  body {
+    background-color: lightgray;
+  }
+  .page {
+    background-color: white;
+    border: 0.375in solid white;
+    margin: 0.25in;
+    box-shadow: 5px 5px 5px gray;
+  }
+  #screenHeader {
+    display: block;
+  }
+}
+
+div {
+  box-sizing: content-box;
+}
+
+.clear {
+  clear: both;
+}
+
+.badge {
+  position: absolute;
+  left: var(--stickerLeft);
+  top: var(--stickerTop);
+  width: var(--stickerWidth);
+  height: var(--stickerHeight);
+}
+
+.badgeLogo {
+  position: absolute;
+  top: 0.25in;
+  left: 0.22in;
+  width: 1.25in;
+  height: 1.25in;
+}
+
+.badgeQR {
+  position: absolute;
+  top: 0.16in;
+  left: 0.1in;
+  width: 1.45in;
+  height: 1.45in;
+}
+
+.badgeRight {
+  position: absolute;
+  top: 0.25in;
+  right: 0.125in;
+  width: 2.4in;
+  text-align: center;
+  font-size: 12pt;
+}
+
+.badgeFName {
+  font-size: 26pt;
+  font-weight: bold;
+}
+
+.badgeFNameSmall {
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+.badgeLName {
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+.badgeFooter {
+  position: absolute;
+  left: 0.125in;
+  bottom: 0in;
+  width: calc(var(--stickerWidth) - 0.125in - 0.225in); /* width tweaked to center horizontal line on printer */
+  border-top: 1px solid black;
+  padding-top: .1in;
+  padding-bottom: 0.2in;
+  text-align: center;
+  font-size: 9pt;
+}
+
+.badgeLoginCode {
+  position: absolute;
+  transform: rotate(180deg);
+  left: 0.21in;
+  bottom: 0.625in;
+}
+
+.p1Title {
+  position: absolute;
+  top: 0.10in;
+  left: 0;
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.p2Title {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-bottom: 0.05in;
+}
+
+.registration {
+  position: absolute;
+  top: 0.05in;
+  right: 0in;
+  left: calc(var(--stickerLeft) + var(--stickerWidth) + 0.25in);
+  font-size: 9pt;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.registrationName {
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+.instructions {
+  position: absolute;
+  top: 1.8in;
+  right: calc(var(--p1Margin) - 0.01in); /* width nudged up for better text flow */
+  left: calc(var(--stickerLeft) + var(--stickerWidth) + 0.25in);
+}
+
+.patch {
+  position: absolute;
+  top: 0.35in;
+  right: var(--p1Margin);
+  width: 1.3in;
+  height: 1.3in;
+}
+
+.p1Body {
+  position: absolute;
+  top: calc(var(--stickerTop) + var(--stickerHeight) + 0.19in);
+  width: 100%;
+}
+
+.p1Body > p {
+  margin-left: var(--p1Margin);
+  margin-right: var(--p1Margin);
+}
+
+.scheduleTitle {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-bottom: 0.09in;
+  margin-left: var(--p1Margin);
+  margin-right: var(--p1Margin);
+}
+
+.schedule {
+  border-collapse: collapse;
+  font-size: 11pt;
+  width: 100%;
+}
+
+.schedule td {
+  padding: 9px;
+  border-bottom: 1px solid black;
+  white-space: nowrap;
+}
+
+.schedule td:first-child {
+  padding-left: var(--p1Margin);
+}
+
+.schedule td:last-child {
+  padding-right: var(--p1Margin);
+}
+
+.schedule td:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 1px;
+}
+
+.schedule tr:first-child {
+  border-top: 2px solid black;
+}
+
+.schedule tr:last-child {
+  border-bottom: 2px solid black;
+}
+
+.scheduleSmall {
+  font-size: 10pt;
+}
+
+.sideName {
+  position: absolute;
+  bottom: 0;
+  right: 0.25in;
+  height: 0.25in;
+  width: 1.5in;
+  font-size: 15pt;
+  line-height: 1.0;
+  transform: rotate(90deg);
+  transform-origin: bottom right;
+}
+
+.sideNameSmall {
+  font-size: 13pt;
+}
+
+.sideName div:last-child {
+  font-size: 12pt;
+}
+
+.bottomText {
+  width: 7.0in;
+}
+
+.submitOnline {
+  float: right;
+  width: 2.05in;
+  font-size: 9pt;
+  background: whitesmoke;
+  padding: 5px;
+}
+
+.feedback {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 9pt;
+}
+
+.feedbackSticker {
+  width: 1.75in;
+  height: 0.5in;
+  background: whitesmoke;
+  border-radius: 0.1in;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -2px;
+  margin-top: -2px;
+}
+
+.feedbackItem td:first-child {
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  line-height: 1.1;
+  width: 2.375in;
+}
+
+.feedbackItem td:not(:first-child) {
+  border: 1px solid black;
+}
+
+.feedbackNumber {
+  background: whitesmoke;
+  text-align: center;
+  vertical-align: bottom;
+  border: 1px solid black;
+  width: 0.25in;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1.00;
+}
+
+.feedbackClassName {
+  font-size: 11pt;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 1px;
+  white-space:nowrap;
+}
+
+.feedbackConference {
+  border-top: 2px solid black;
+}
+
+.btb {
+  border-top: 2px solid black;
+}
+
+.feedbackQuestions {
+  padding-left: 8px;
+  line-height: 1.47;
+  vertical-align: top;
+}
+
+</style>
+</head>
+<body>
+
+<div id="screenHeader">
+  {{if .Preview}}
+     <p><a href="https://www.google.com/chrome">Google Chrome</a> is required for form preview and printing.
+    {{with $.Request.Header.Get "Referer"}}<p><a href="{{.}}"><button>Done</button></a>{{end}}
+  {{else}}
+    {{if .Participants}}
+      <button onclick="window.print()">Print</button>
+      <form id="clearAndRefresh" style="display:inline;" method="POST">
+        {{range .Participants -}}
+          <input type="hidden" name="idsig" value="{{.ID}}/{{$.Conference.PrintSignature .}}">
+          <input type="hidden" name="prev" value="{{.Name}}">
+        {{- end}}
+        <button type="submit">Clear print flags and refresh</button>
+      </form>
+      {{if .Auto}}
+        <script>
+          document.onreadystatechange = () => {
+            if (document.readyState === "complete") {
+              window.print();
+            }
+          };
+          window.onafterprint = () => { document.getElementById("clearAndRefresh").submit(); };
+        </script>
+      {{end}}
+    {{else}}
+      <form id="refresh" style="display:inline;" method="POST">
+        {{range index $.Request.Form "prev"}}<input type="hidden" name="prev" value="{{.}}">{{end}}
+        <button type="submit">Refresh</button>
+      </form>
+      <a href="/dashboard/admin"><button>Cancel</button></a>
+      {{if .Auto}}
+        <script>
+          window.setTimeout(() => document.getElementById("refresh").submit(), 1000 * {{.Auto}});
+        </script>
+      {{end}}
+      {{with index $.Request.Form "prev"}}
+        <p>Previous print batch:
+        <ul>{{range .}}<li>{{.}}{{end}}</ul>
+      {{end}}
+    {{end}}
+  {{end}}
+</div>
+
+{{$year := $.Conference.Date.Format "2006"}}
+
+{{range $p := .Participants}}
+<div class="page">
+
+  <div class="submitOnline">
+    Submit your evaluation online instead!
+    Enter the evaluation code from each instructor at seaptc.org.
+  </div>
+
+  <div class="p2Title">{{$year}} PTC &middot; Evaluation &amp; Participation Form</div>
+  Please mark the evaluation for each class using a scale of 1 (Poor) to 4 (Great).</br>
+  Return form to session 6 instructor or PTC Admin in College Center lobby.
+  <table class="feedback clear">
+    {{range $.Conference.ParticipantSessionClasses $p}}
+      <tr class="btb">
+        <td rowspan="2">
+          <div class="feedbackSticker">{{if .Number}}Stick {{.NumberDotPart}} attendance<br> sticker from instructor here.{{else}}&nbsp;<br>&nbsp;{{end}}</div>
+        </td>
+        <td colspan="5" class="feedbackClassName">{{if .Number}}{{.Number}}: {{end}}{{.ShortTitle}}{{.IofN}}</td>
+      </tr>
+      <tr>
+        <td class="feedbackNumber">poor<br>1</td>
+        <td class="feedbackNumber">2</td>
+        <td class="feedbackNumber">3</td>
+        <td class="feedbackNumber">great<br>4</td>
+        <td rowspan="5" class="feedbackQuestions">{{if .Instructor}}Instructor's {{end}}Comments:</td>
+      </tr>
+      {{template "feedbackItem" "Instructor's knowledge of course material"}}
+      {{template "feedbackItem" "Presentation of material"}}
+      {{template "feedbackItem" "Usefulness of topic"}}
+      {{template "feedbackItem" "Session overall"}}
+    {{end}}
+    <tr class="feedbackConference">
+      <td class="feedbackClassName">Conference Evaluation</td>
+      <td class="feedbackNumber">poor<br>1</td>
+      <td class="feedbackNumber">2</td>
+      <td class="feedbackNumber">3</td>
+      <td class="feedbackNumber">great<br>4</td>
+      <td rowspan="10" class="feedbackQuestions" >
+        What new subject should we add to the PTC next year?<br>
+        &nbsp;<br>
+        Is there a subject that you would like to <i>teach</i> at the PTC next year?<br>
+        &nbsp;<br>
+        Comments:
+      </td>
+    </tr>
+    {{template "feedbackItem" "Overall conference experience"}}
+    {{template "feedbackItem" "Pre-event promotion"}}
+    {{template "feedbackItem" "Online registration (if applicable)"}}
+    {{template "feedbackItem" "On-site check-in process"}}
+    {{template "feedbackItem" "Midway"}}
+    {{template "feedbackItem" "Lunch"}}
+    {{template "feedbackItem" "Facilities"}}
+    {{template "feedbackItem" "Mobile website (seaptc.org)"}}
+    {{template "feedbackItem" "Signage and wayfinding"}}
+  </table>
+
+</div>
+
+<div class="page">
+  <div class="p1Title">
+    {{$year}} PTC &middot; Evaluation &amp; Participation Form
+  </div>
+
+  <div class="badge debugOutline">
+    {{if and .ShowQRCode (or .Phone .Email)}}
+       <img class="badgeQR" src="/dashboard/vcard?FN={{urlquery .Name}}{{with .Phone}}&TEL={{urlquery .}}{{end}}{{with .Email}}&EMAIL={{urlquery .}}{{end}}">
+    {{else}}
+       <img class="badgeLogo" src="{{staticFile "patch-bw.png"}}">
+    {{end}}
+    <div class="badgeRight">
+      <div class="{{if le (len .NicknameOrFirstName) 10}}badgeFName{{else}}badgeFNameSmall{{end}}">{{.NicknameOrFirstName}}</div>
+      <div class="badgeLName">{{.LastName}}</div>
+      <p>
+      {{with .Unit}}{{.}}</br>{{end}}
+      {{with .District}}{{.}}{{if not (eq . "Council")}} District{{end}}<br>{{end}}
+      {{with .Council}}{{.}} Council{{end}}<br>
+    </div>
+    <div class="badgeFooter">
+        {{$year}} Program &amp; Training Conference<br>
+        Chief Seattle Council &middot; Boy Scouts of America
+    </div>
+    <div class="badgeLoginCode">
+      {{with .LoginCode}}Login code: {{.}}{{end}}
+    </div>
+  </div>
+
+  <div class="registration">
+    <div class="registrationName">
+      {{.Name}}
+    </div>
+    <p>
+    {{with .LoginCode}}<b>Login code: {{.}}</b></br>{{end}}
+    {{with .Unit}}{{.}}</br>{{end}}
+    {{if .District}}
+      {{.District}}{{if not (eq .District "Council")}} District{{end}}<br>
+    {{else if .Council}}
+      {{.Council}} Council<br>
+    {{end}}
+    {{with .BSANumber}}BSA # {{.}}<br>{{end}}
+    {{with .Phone}}Phone: {{.}}<br>{{end}}
+    {{with .Email}}{{.}}<br>{{end}}
+    {{if and .Address .City .State .Zip}}{{.Address}}<br>{{.City}}, {{.State}} {{.Zip}}<br>{{end}}
+    {{with .StaffRole}}Staff: {{.}}<br>{{end}}
+    Reg#: {{.RegistrationNumber}}<br>
+  </div>
+
+  <!-- patch is after registration so it prints on top of long registration lines -->
+  <img class="patch" src="{{staticFile "patch-bw.png"}}">
+
+  <div class="instructions">
+    <b>Instructions:</b>
+    Submit evaluation using mobile device at seaptc.org or complete the
+    evaluation form on the back of this page. Evaluations <i>must</i> be
+    submitted because they serve as your official training record today and
+    will be used to plan next year's PTC.  Return form to session 6 instructor
+    or to PTC Administration (located in College Center lobby). Get the event
+    patch by turning in the form or by showing seaptc.org confirmation
+    page.
+  </div>
+
+  <div class="p1Body">
+
+    <div class="scheduleTitle">{{.Firsts}} Conference Schedule</div>
+    <table class="schedule">
+      <colgroup>
+        <col width="0%">
+        <col width="100%">
+        <col width="0%">
+      </colgroup>
+      {{range $.Conference.ParticipantSchedule $p}}
+        <tr><td>{{.StartText}}-{{.EndText}}</td><td>
+          {{- if .Instructor}}<b>Instructor</b> {{end}}
+          {{- .Description}}</td><td>{{.Location}}</td></tr>
+      {{- end}}
+    </table>
+    <div class="bottomText mb-4">
+      <p>{{template "adminBlurb"}}
+      <p>{{template "scoutShopBlurb"}}
+      <p>{{template "midwayBlurb"}}
+      {{with .LoginCode}}<p>Login to <b>seaptc.org</b> with code <b>{{.}}</b> to view your schedule and complete your evaluation.{{end}}
+      <p><b>CC</b> College Center • <b>ED</b> Education • <b>IB</b> Instruction Building • <b>HS</b> Health Science &amp; Student Resources Building<br>
+    </div>
+  </div>
+  <div class="sideName">
+    <div{{if gt (len .LastName) 13}} class="sideNameSmall"{{end}}><b>{{.LastName}}</b></div>
+    <div>{{.FirstName}}{{with .Suffix}}, {{.}}{{end}}</div>
+  </div>
+</div>
+
+{{end}}
+</body>
+</html>
+{{end}}{{end}}
+
+{{define "feedbackItem"}}
+  <tr class="feedbackItem">
+    <td>{{.}}</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+{{end}}
+
+{{define "classTitle"}}{{if .Number}}{{.Number}}: {{end}}{{.ShortTitle}}{{.IofN}}{{end}}

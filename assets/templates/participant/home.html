@@ -1,0 +1,41 @@
+{{define "body"}}{{with $.Data}}
+
+{{if .EvaluatedConference}}
+  <h5>Evaluation Complete!</h5>
+  <p>To get your official PTC patch, show this screen to the instructor of your
+  session six class or go to PTC Administration in the College Center lobby.
+  <p><img class="img-fluid" src="/static/patch-color.png">
+{{else}}
+  <h5>Evaluation & Attendance</h5>
+  <p>Please evaluate classes at the end of each session and evaluate the overall
+  conference when you are done for the day. These evaluations are used to plan
+  next year's PTC and serve as your official training record.
+{{end}}
+
+<p class="mb-4"><a href="/eval" class="btn btn-secondary">Evaluate Class</a>
+<a href="/eval?evalCode=conference" class="btn btn-secondary">Evaluate Conference</a>
+
+{{if or .EvaluatedClasses .EvaluatedConference}}
+  <h5>Completed evaluations</h5>
+  <ul>
+    {{range .EvaluatedClasses}}<li><a href="/eval?evalCode={{.EvaluationCode}}">{{.Number}}</a>: {{.ShortTitle}}{{.IofN}}{{end}}
+    {{if .EvaluatedConference}}<li><a href="/eval?evalCode=conference">Conference</a>{{end}}
+  </ul>
+{{end}}
+
+<h5>Schedule</h5>
+<table class="table table-striped mb-3">
+  <tbody>
+    {{range .Schedule}}
+    <tr><td>{{.StartText}}<br>{{.EndText}}</td><td>{{if .Instructor}}<b>Instructor</b> {{end}}{{.Description}}<br><i>{{.Location}}</i></td></tr>
+    {{end}}
+  </tbody>
+</table>
+
+<p>{{template "adminBlurb"}}
+<p>{{template "scoutShopBlurb"}}
+<p>{{template "midwayBlurb"}}
+<p class="mb-4"><a href="/static/map.png">Map</a>
+  | <a href="https://seattlebsa.org/ptc-documents/{{$.Conference.Date.Format "2006"}}">Class Materials</a>
+
+{{end}}{{end}}

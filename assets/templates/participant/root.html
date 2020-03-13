@@ -1,0 +1,29 @@
+{{define "ROOT"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="{{staticFile "/favicon.ico"}}"> 
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">	
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="{{staticFile "bootstrap.min.css"}}">
+  {{block "head" $}}{{end}}
+  <title>{{block "title" $}}PTC {{$.Conference.Date.Format "2006"}}{{end}}</title>
+</head>
+<body>
+  <div class="mb-3">
+    <div style="background-color: #82b5d4;">
+      <div class="container pb-3 pt-3">
+        {{if $.Participant}}<a class="ml-1 btn btn-outline-secondary btn-sm float-right" href="/logout">Logout</a>{{end}}
+        <h5 class="mb-0">
+          Program & Training Conference<br>
+          <small>{{with $.Participant}}{{.Name}}{{else}}Chief Seattle Council &middot; {{$.Conference.Date.Format "2006"}}{{end}}</small>
+        </h5>
+      </div>
+    </div>
+  </div>
+  <div class="container">{{template "flash" $}}{{block "body" $}}{{end}}</div>
+</body>
+</html>
+{{end}}
