@@ -18,6 +18,13 @@ import (
 	"github.com/seaptc/seaptc/log"
 )
 
+func DefaultProjectID() string {
+	if id, ok := os.LookupEnv("GOOGLE_CLOUD_PROJECT"); ok {
+		return id
+	}
+	return "seaptc-20"
+}
+
 type Store struct {
 	client *datastore.Client
 

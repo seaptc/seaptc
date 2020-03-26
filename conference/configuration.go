@@ -23,6 +23,12 @@ type Lunch struct {
 	UnitTypes []string `json:"unitTypes"`
 }
 
+type SuggestedSchedule struct {
+	Code    string `json:"code"`
+	Name    string `json:"name"`
+	Classes []int  `json:"classes"`
+}
+
 type Configuration struct {
 	Year  int `json:"year"`
 	Month int `json:"month"`
@@ -39,6 +45,8 @@ type Configuration struct {
 
 	// First lunch is default
 	Lunches []*Lunch `json:"lunches"`
+
+	SuggestedSchedules []*SuggestedSchedule `json:"SuggestedSchedules"`
 
 	RegistrationURL string `json:"registrationURL"`
 

@@ -168,6 +168,9 @@ func parseClasses(r io.Reader) ([]*conference.Class, error) {
 			// Order of the Arrow
 			continue
 		}
+		if c.Length <= 0 {
+			c.Length = 1
+		}
 		c.Start = c.Number/100 - 1
 		c.End = c.Start + c.Length - 1
 		if c.Start < 0 || c.End < 0 || c.Start >= conference.NumSession || c.End >= conference.NumSession {

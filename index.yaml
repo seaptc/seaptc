@@ -1,0 +1,5 @@
+indexes:
+- kind: "blob"
+  ancestor: yes
+  properties:
+  - name: "Version"

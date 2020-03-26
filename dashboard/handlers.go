@@ -799,7 +799,7 @@ func (s *service) Serve_dashboard_report(rc *requestContext) error {
 				c.Registered++
 			}
 		}
-    
+
 		for _, n := range p.InstructorClasses {
 			instructors[instructorKey{participantID: p.ID, classNumber: n}] = true
 		}

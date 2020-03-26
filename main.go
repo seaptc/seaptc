@@ -12,6 +12,7 @@ import (
 	"github.com/seaptc/seaptc/catalog"
 	"github.com/seaptc/seaptc/dashboard"
 	"github.com/seaptc/seaptc/participant"
+	"github.com/seaptc/seaptc/store"
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 
 	var (
 		addr         = flag.String("addr", defaultAddr, "Listen on this address")
-		projectID    = flag.String("p", "seaptc-ds", "Project id")
+		projectID    = flag.String("p", store.DefaultProjectID(), "Project id")
 		assetsDir    = flag.String("d", "assets", "Direcory containing assets")
 		useEmulator  = flag.Bool("e", devMode, "Use Datastore emulator")
 		timeOverride = flag.Duration("t", 0, "Use current time as conference date plus this duration")

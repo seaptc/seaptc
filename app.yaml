@@ -1,0 +1,22 @@
+runtime: go113
+default_expiration: "2d"
+
+handlers:
+- url: /favicon\.ico
+  static_files: assets/static/favicon.ico
+  upload: assets/static/favicon.ico
+
+- url: /robots\.txt
+  static_files: assets/static/robots.txt
+  upload: assets/static/robots.txt
+
+- url: /map
+  static_files: assets/static/map.pdf
+  upload: assets/static/map.pdf
+
+- url: /static/
+  static_dir: assets/static
+
+- url: /.*
+  secure: always
+  script: auto

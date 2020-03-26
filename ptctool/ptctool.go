@@ -17,7 +17,7 @@ import (
 func main() {
 	ctx := context.Background()
 	log.SetFlags(0)
-	projectID := flag.String("p", "seaptc-ds", "Project for Datastore")
+	projectID := flag.String("p", store.DefaultProjectID(), "Project for Datastore")
 	useEmulator := flag.Bool("e", true, "Use Datastore emulator")
 	flag.Parse()
 	s, err := store.New(ctx, *projectID, *useEmulator)

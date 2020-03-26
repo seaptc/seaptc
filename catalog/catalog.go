@@ -86,38 +86,38 @@ func (s *service) Serve_directions(rc *requestContext) error {
 }
 
 func (s *service) Serve_catalog_(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.All, -1, true)
+	return s.servePage(rc, s.templates.All, -1, true)
 }
 
 func (s *service) Serve_catalog_new(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.New, -1, false)
+	return s.servePage(rc, s.templates.New, -1, false)
 }
 
 func (s *service) Serve_catalog_cub(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.CubScoutProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.CubScoutProgram, false)
 }
 
 func (s *service) Serve_catalog_bsa(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.ScoutsBSAProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.ScoutsBSAProgram, false)
 }
 
 func (s *service) Serve_catalog_ven(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.VenturingProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.VenturingProgram, false)
 }
 
 func (s *service) Serve_catalog_sea(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.SeaScoutProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.SeaScoutProgram, false)
 }
 
 func (s *service) Serve_catalog_com(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.CommissionerProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.CommissionerProgram, false)
 }
 
 func (s *service) Serve_catalog_you(rc *requestContext) error {
-	return s.serve_page(rc, s.templates.Program, conference.YouthProgram, false)
+	return s.servePage(rc, s.templates.Program, conference.YouthProgram, false)
 }
 
-func (s *service) serve_page(rc *requestContext, t *template.Template, program int, grid bool) error {
+func (s *service) servePage(rc *requestContext, t *template.Template, program int, grid bool) error {
 	classes := rc.Conference.Classes()
 
 	// Ingore classes with negative requested capacity.
@@ -167,6 +167,7 @@ func (s *service) serve_page(rc *requestContext, t *template.Template, program i
 				data.Classes = append(data.Classes, c)
 			}
 		}
+		data.SuggestedSchedules = getSuggestedSchedules(rc.Conference, data.Program.Code)
 	}
 	return rc.Respond(t, http.StatusOK, &data)
 }
@@ -182,6 +183,37 @@ type catalogClass struct {
 type catalogSuggestedSchedule struct {
 	Name    string
 	Classes []*catalogClass
+}
+
+func getSuggestedSchedules(conf *conference.Conference, programCode string) []*catalogSuggestedSchedule {
+	var result []*catalogSuggestedSchedule
+	for _, ss := range conf.Configuration.SuggestedSchedules {
+		if ss.Code != programCode {
+			continue
+		}
+		var css catalogSuggestedSchedule
+		css.Name = ss.Name
+		for _, classNumber := range ss.Classes {
+			elective := false
+			if classNumber < 0 {
+				elective = true
+				classNumber = -classNumber
+			}
+			c := conf.Class(classNumber)
+			if c == nil {
+				continue
+			}
+			css.Classes = append(css.Classes, &catalogClass{
+				Number:    classNumber,
+				Length:    c.Length(),
+				Title:     c.Title,
+				TitleNote: c.TitleNote,
+				Flag:      elective,
+			})
+		}
+		result = append(result, &css)
+	}
+	return result
 }
 
 func createCatalogGrid(classes []*conference.Class, morning bool) [][]*catalogClass {
@@ -243,7 +275,11 @@ func createCatalogGrid(classes []*conference.Class, morning bool) [][]*catalogCl
 
 		for j := 0; j < len(row); {
 			if row[j] != nil {
-				j += row[j].Length
+				l := row[j].Length
+				if l <= 0 {
+					l = 1 // prevent infinite loop
+				}
+				j += l
 				continue
 			}
 			row[j] = noclass
