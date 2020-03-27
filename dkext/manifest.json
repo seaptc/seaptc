@@ -1,0 +1,47 @@
+{
+  "manifest_version":2,
+  "name":"DKExtender",
+  "version":"0.1",
+  "permissions":[
+    "tabs",
+    "storage",
+    "cookies",
+    "http://localhost:8080/api/*",
+    "*://seaptc.org/api/*",
+    "*://seattlebsa.doubleknot.com/*"
+  ],
+  "background":{
+    "scripts":[
+      "common.js",
+      "background.js"
+    ],
+    "persistent":false
+  },
+  "browser_action": {
+    "defaut_title": "DK Extender",
+    "default_popup": "popup.html"
+  },
+  "content_scripts":[
+    {
+      "matches":[
+        "https://*.doubleknot.com/manageevents/confirmedit.asp?*",
+        "https://*.doubleknot.com/ManageEvents/ConfirmEdit.asp?*",
+        "https://*.doubleknot.com/ManageEvents/EditActivity.asp"
+      ],
+      "js":[
+        "common.js",
+        "class.js",
+        "sessionevent.js"
+      ]
+    },
+    {
+      "matches":[
+        "https://*.doubleknot.com/manageevents/eventsmanagement.aspx?*"
+      ],
+      "js":[
+        "common.js",
+        "programsession.js"
+      ]
+    }
+  ]
+}
