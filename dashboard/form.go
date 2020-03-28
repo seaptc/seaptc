@@ -208,3 +208,28 @@ func (s *service) Serve_dashboard_vcard(rc *requestContext) error {
 	rc.Response.Write(code.PNG())
 	return nil
 }
+
+func (s *service) Serve_dashboard_reprintForms(rc *requestContext) error {
+	if !rc.IsStaff() {
+		return application.ErrForbidden
+	}
+	if rc.IsPost() {
+		ids := rc.Request.Form["id"]
+		m := make(map[string]string, len(ids))
+		for _, id := range ids {
+			m[id] = ""
+		}
+		err := s.Store.SetPrintSignatures(rc.Ctx, m)
+		if err != nil {
+			return err
+		}
+		return rc.Redirect("/dashboard/admin", application.FlashInfo, "%d reprints queued.", len(ids))
+	}
+	data := struct {
+		Participants []*conference.Participant
+	}{
+		rc.Conference.Participants(),
+	}
+	conference.SortParticipants(data.Participants, "")
+	return rc.Respond(s.templates.Reprint, http.StatusOK, &data)
+}

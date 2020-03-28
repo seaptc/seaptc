@@ -69,12 +69,18 @@ func evaluationKey(participantID string) *datastore.Key {
 	return &datastore.Key{Kind: "eval", Name: participantID, Parent: conferenceEntityGroupKey}
 }
 
+// blobEntity stores Gob or JSON encoded data as []byte.
 type blobEntity struct {
+	// Version is used to query modified blobs. Version is set from
+	// metaEntty.Version. Some blobs do not use Version (it's always zero).
 	Version int64
-	Data    []byte `datastore:",noindex"`
+
+	// Data is the Gob or JSON encoded data.
+	Data []byte `datastore:",noindex"`
 }
 
 type metaEntity struct {
+	// Version is incremented in a transaction when storing some blobEntities.
 	Version int64
 }
 

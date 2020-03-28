@@ -31,6 +31,7 @@ type templates struct {
 	LunchList,
 	Participant,
 	Participants,
+	Reprint,
 	Error *template.Template `template:".,root.html,../common.html"`
 
 	Form          *template.Template `template:".,../common.html"`

@@ -1,79 +1,35 @@
-{{define "ROOT"}}
-<!DOCTYPE html>
-<html lang="en-US">
-
+{{define "ROOT"}}<!DOCTYPE html>
+<html lang="en">
 <head>
+  <link rel="icon" href="{{staticFile "/favicon.ico"}}">
   <meta charset="utf-8" />
   <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="google" content="notranslate">
   <link rel="stylesheet" href="{{staticFile "bootstrap.min.css"}}">
-  <style>body { font-family: "Ubuntu"; }</style>
   <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
-  <title>{{block "title" $}}Program and Training Conference{{end}}</title>
-  <style>
-    .sticky-offset {
-      top: 107px;
-    }
-  
-    .navbar-scout-color {
-      background-color: #003f87;
-    }
-  
-    .navbar-background {
-      background-color: #f0f0f0ff;
-      padding: 5px;
-    }
-  
-    .session-table-color {
-      background: #e3e3e3;
-    }
-  
-    .mobile-sidebar {
-      right: 40px;
-      top: 60px;
-    }
-  </style>
+  {{block "head" $}}{{end}}
+  <title>{{block "title" $}}PTC {{$.Conference.Date.Format "2006"}}{{end}}</title>
 </head>
-
-<body id="top">
-  <nav class="navbar-fluid sticky-top navbar-background">
-    <div class="container">
-      <div class="row">
-        <div class="ml-1 d-md-none">
-          <img width="250" src="/static/BSACSCLogoV5.png" />
-        </div>
-        <div class="ml-1 d-none d-md-block">
-          <img width="300" src="/static/BSACSCLogoV5.png" />
-        </div>
-        <div id="sidebar-mobile" class="d-md-none ml-auto mr-1">
-          <nav class="navbar navbar-light">
-            <button class="navbar-toggler navbar-light" type="button" data-toggle="collapse"
-              data-target="#MobileSidebar" aria-controls="navbarToggleExternalContent" aria-expanded="false"
-              aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </nav>
-        </div>
+<body style='font-family: "Ubuntu"'> <!-- Font used on seattlebsa.org -->
+  <div class="mb-3">
+    <div style="background-color: rgb(0, 63, 135); color: white;">
+      <div class="container pb-3 pt-3">
+        <h5 class="mb-0">
+          <a href="https://seattlebsa.org/ptc" style="color: white;">Program & Training Conference</a><br>
+          <small>Chief Seattle Council &middot; {{$.Conference.Date.Format "January 2, 2006"}}</small>
+        </h5>
       </div>
     </div>
-    <div class="container navbar-dark navbar-scout-color">
-      <a class="navbar-brand ml-auto d-flex justify-content-center"
-        href="https://seattlebsa.org/ptc">{{$.Conference.Date.Format "2006"}}
-        Program &amp; Training Conference</a>
-      <ul class="navbar-nav mr-auto">
-      </ul>
-    </div>
-  </nav>
+  </div>
   <div class="container">
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-8 col-lg-9">
-        {{with $.Conference.Configuration.CatalogStatusMessage}}<div class="alert alert-warning my-3">{{.}}</div>{{end}}
         {{block "body" $}}{{end}}
       </div>
-      <div id="sidebar" class="col-md-4 col-lg-3 d-none d-md-block sidebar-expanded">
-        <div class="list-group sticky-top sticky-offset">
+      <div class="col-md-4 col-lg-3">
+        <div class="list-group">
           <a href="https://seattlebsa.org/ptc" class="list-group-item list-group-item-action">PTC Home &rarr;</a>
           {{with $.Conference.Configuration.RegistrationURL}}
             <a href="{{.}}" class="list-group-item list-group-item-action">Register &rarr;</a>
@@ -89,33 +45,10 @@
         </div>
       </div>
     </div>
-    <div id="sidebar-mobile" class="d-md-none">
-      <div id="MobileSidebar" class="list-group sticky-top mobile-sidebar position-fixed collapse ml-auto">
-        <a href="https://seattlebsa.org/ptc" class="list-group-item list-group-item-action">PTC Home &rarr;</a>
-        {{with $.Conference.Configuration.RegistrationURL}}
-          <a href="{{.}}" class="list-group-item list-group-item-action">Register &rarr;</a>
-        {{end}}
-        <a href="/catalog" class="list-group-item list-group-item-action">All Classes</a>
-        <a href="/catalog/new" class="list-group-item list-group-item-action">New for 2019</a>
-        <a href="/catalog/cub" class="list-group-item list-group-item-action">Cub Scout Adults</a>
-        <a href="/catalog/bsa" class="list-group-item list-group-item-action">Scouts BSA Adults</a>
-        <a href="/catalog/ven" class="list-group-item list-group-item-action">Venturing Adults</a>
-        <a href="/catalog/sea" class="list-group-item list-group-item-action">Sea Scout Adults</a>
-        <a href="/catalog/com" class="list-group-item list-group-item-action">Commissioner</a>
-        <a href="/catalog/you" class="list-group-item list-group-item-action">Youth</a>
-      </div>
-    </div>
   </div>
-
-  <script src="{{staticFile "jquery.min.js"}}"></script>
-  <script src="{{staticFile "bootstrap.min.js"}}"></script>
-  <script src="{{staticFile "site.js"}}"></script>
-  <script src="{{staticFile "catalog.js"}}"></script>
 </body>
-
 </html>
 {{end}}
-
 
 {{define "classDesc"}}<tr>
   <th valign="top" id="c{{.Number}}">{{.Number}}</th>
@@ -145,4 +78,3 @@
 {{- end}}
 
 {{define "register"}}{{with .Conference.Configuration.RegistrationURL}}<p><a href="{{.}}" class="btn btn-primary btn-large">Register Now!</a>{{end}}{{end}}
-  

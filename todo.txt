@@ -1,3 +1,2 @@
-reprint schedule
 reports
 instructors

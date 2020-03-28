@@ -1,0 +1,16 @@
+{{define "title"}}Reprint{{end}}
+{{define "body"}}
+<h3>Reprint Forms</h3>
+<p>
+<form  method="POST">
+  <div class="form-group">
+    <label for="id">Select one or more forms to reprint</label>
+    <select multiple size="20" name="id" class="form-control">
+      {{range $.Data.Participants}}
+        <option value="{{.ID}}">{{.Name}}</option>
+      {{end}}
+    </select>
+  </div>
+ <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{{end}}

@@ -24,9 +24,14 @@ type Lunch struct {
 }
 
 type SuggestedSchedule struct {
-	Code    string `json:"code"`
-	Name    string `json:"name"`
-	Classes []int  `json:"classes"`
+	// Code is program code from ProgramDescription.Code.
+	Code string `json:"code"`
+
+	// Name of suggested schedule.
+	Name string `json:"name"`
+
+	// Class numbers. Negative numbers are electives.
+	Classes []int `json:"classes"`
 }
 
 type Configuration struct {
@@ -64,9 +69,10 @@ type Configuration struct {
 
 func newConfiguration() *Configuration {
 	return &Configuration{
-		StaffIDs: []string{},
-		AdminIDs: []string{},
-		Lunches:  []*Lunch{tbdLunch},
+		StaffIDs:           []string{},
+		AdminIDs:           []string{},
+		Lunches:            []*Lunch{tbdLunch},
+		SuggestedSchedules: []*SuggestedSchedule{},
 	}
 }
 

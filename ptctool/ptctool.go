@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"sort"
@@ -84,7 +87,7 @@ var commands = map[string]*command{
 		help: "Read configuration from stdin as JSON and save to datastore.",
 		fn: func(ctx context.Context, s *store.Store) error {
 			var config conference.Configuration
-			if err := json.NewDecoder(os.Stdin).Decode(&config); err != nil {
+			if err := decodeJSONInput(&config); err != nil {
 				return err
 			}
 			return s.PutConfiguration(ctx, &config)
@@ -203,4 +206,22 @@ func randUint32() (uint32, error) {
 		return 0, err
 	}
 	return uint32(b[0]) | uint32(b[1])<<8 | uint32(b[2])<<16 | uint32(b[3])<<24, nil
+}
+
+func decodeJSONInput(v interface{}) error {
+	data, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		return err
+	}
+	d := json.NewDecoder(bytes.NewReader(data))
+	d.DisallowUnknownFields()
+	err = d.Decode(v)
+	var se *json.SyntaxError
+	if errors.As(err, &se) {
+		offset := int(se.Offset)
+		return fmt.Errorf("stdin:%d: %w", bytes.Count(data[:offset+1], []byte("\n"))+1, err)
+	} else if err != nil {
+		return fmt.Errorf("stdin:1: %w", err)
+	}
+	return nil
 }
