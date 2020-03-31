@@ -90,6 +90,9 @@ var commands = map[string]*command{
 			if err := decodeJSONInput(&config); err != nil {
 				return err
 			}
+			if err := config.Validate(); err != nil {
+				return err
+			}
 			return s.PutConfiguration(ctx, &config)
 		}},
 	"eval-codes": {

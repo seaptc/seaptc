@@ -16,7 +16,7 @@ import (
 	"unicode/utf8"
 )
 
-func (s *Application) initFuncMap(assetsDir string) {
+func (s *Application) initTemplateFuncMap(assetsDir string) {
 	var fileHashes sync.Map
 	s.templateFuncs = template.FuncMap{
 		"args": func(values ...interface{}) []interface{} {

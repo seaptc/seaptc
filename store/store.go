@@ -103,23 +103,28 @@ var blobUpdaters = map[string]func(*conference.Conference, []byte) (*conference.
 
 const maxAge = time.Minute * 10
 
-func (s *Store) GetConference(ctx context.Context, noCache bool) (*conference.Conference, bool, error) {
+func (s *Store) GetConference(ctx context.Context, noCache bool) (conf *conference.Conference, fromCache bool, err error) {
 	s.mu.RLock()
-	conf := s.conf
+	conf = s.conf
 	lastSync := s.lastSync
-	maxVersion := s.maxVersion
+	version := s.maxVersion
 	s.mu.RUnlock()
 
 	if !noCache && time.Since(lastSync) < maxAge {
 		return conf, true, nil
 	}
 
+	conf, err = s.update(ctx, version)
+	return conf, err != nil, err
+}
+
+func (s *Store) update(ctx context.Context, version int64) (*conference.Conference, error) {
 	var blobs []blobEntity
 	keys, err := s.client.GetAll(ctx,
-		datastore.NewQuery("blob").Ancestor(conferenceEntityGroupKey).Filter("Version >", maxVersion),
+		datastore.NewQuery("blob").Ancestor(conferenceEntityGroupKey).Filter("Version >", version),
 		&blobs)
 	if err != nil {
-		return nil, true, fmt.Errorf("error querying for blob updates: %w", err)
+		return nil, fmt.Errorf("error querying for blob updates: %w", err)
 	}
 
 	s.mu.Lock()
@@ -132,14 +137,14 @@ func (s *Store) GetConference(ctx context.Context, noCache bool) (*conference.Co
 		}
 		fn := blobUpdaters[name]
 		if fn == nil {
-			return nil, true, fmt.Errorf("store: unknown blob name %q", name)
+			return nil, fmt.Errorf("store: unknown blob name %q", name)
 		}
 
 		log.Logf(ctx, log.Info, "Loading blob %s", name)
 
-		conf, err = fn(conf, b.Data)
+		conf, err := fn(s.conf, b.Data)
 		if err != nil {
-			return nil, true, err
+			return nil, err
 		}
 		s.versions[name] = b.Version
 		if b.Version > s.maxVersion {
@@ -148,7 +153,8 @@ func (s *Store) GetConference(ctx context.Context, noCache bool) (*conference.Co
 		s.conf = conf
 	}
 
-	return s.conf, false, nil
+	s.lastSync = time.Now()
+	return s.conf, nil
 }
 
 func (s *Store) putBlob(ctx context.Context, key *datastore.Key, data []byte) error {

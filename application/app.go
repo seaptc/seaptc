@@ -48,17 +48,7 @@ func New(ctx context.Context, projectID string, useEmulator bool, assetsDir stri
 		return nil, err
 	}
 
-	conf, _, err := app.Store.GetConference(ctx, false)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := conf.Configuration.Validate(); err != nil {
-		return nil, err
-	}
-
-	app.initFuncMap(assetsDir)
-
+	app.initTemplateFuncMap(assetsDir)
 	mux := http.NewServeMux()
 	mux.Handle("/static/", http.FileServer(http.Dir(assetsDir)))
 
