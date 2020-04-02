@@ -11,7 +11,7 @@ import (
 const (
 	NumSession         = 6
 	LunchSession       = 2
-	NoClassClassNumber = 999
+	NoClassClassNumber = 1
 )
 
 var TimeLocation = func() *time.Location {
