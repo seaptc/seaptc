@@ -26,6 +26,7 @@
   <div class="container">
     <div class="row mb-5">
       <div class="col-md-8 col-lg-9">
+        {{with $.Conference.Configuration.CatalogStatusMessage}}<div class="alert alert-secondary" role="alert">{{.}}</div>{{end}}
         {{block "body" $}}{{end}}
       </div>
       <div class="col-md-4 col-lg-3">
