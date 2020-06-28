@@ -51,7 +51,9 @@ function setup() {
 
   // Tab explosion.
   let tbody = document.querySelector("#ActionMenu_ManageProgramSessions tbody")
-  if (tbody) {
+  if (!tbody) {
+    console.log("DKE: could not find action menu");
+  } else {
     let tr = tbody.appendChild(document.createElement("tr"))
     tr.appendChild(document.createElement("td")).textContent = "💥";
     let anchor = tr.appendChild(document.createElement("td")).appendChild(document.createElement("a"));

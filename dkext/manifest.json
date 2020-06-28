@@ -36,6 +36,7 @@
     },
     {
       "matches":[
+        "https://*.doubleknot.com/ManageEvents/EventsManagement.aspx?*",
         "https://*.doubleknot.com/manageevents/eventsmanagement.aspx?*"
       ],
       "js":[

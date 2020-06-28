@@ -180,8 +180,11 @@ function getClassNumber() {
 function setup() {
   let title = document.querySelector("#pagetitlediv table tbody tr:first-of-type th");
   if (!title ||
-      ((title.innerText.toUpperCase() !== "CREATE AND MODIFY A SESSION EVENT") &&
-      (title.innerText.toUpperCase() !== "CREATE ALL OCCURRENCES OF A SESSION EVENT"))) {
+      (
+        (title.innerText.toUpperCase() !== "MODIFY ALL OCCURRENCES OF A SESSION EVENT") &&
+        (title.innerText.toUpperCase() !== "CREATE AND MODIFY A SESSION EVENT") &&
+        (title.innerText.toUpperCase() !== "CREATE ALL OCCURRENCES OF A SESSION EVENT")
+      )) {
     console.log("DKE: could not find session event title on page");
     return;
   }
